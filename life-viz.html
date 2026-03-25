@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Жизнь в числах</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0a; --surface:#141414; --surface2:#1c1c1c;
+  --border:#2a2a2a; --text:#f0ece4; --muted:#6a6560; --muted2:#4a4540;
+  --lived:#c8a96e; --lived-dim:#7a5f32; --lived-light:#e8c98e;
+  --danger:#b85c5c;
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh}
+.app{max-width:960px;margin:0 auto;padding:48px 24px 80px}
+
+/* HEADER */
+header{margin-bottom:48px;border-bottom:1px solid var(--border);padding-bottom:28px}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.header-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;padding-top:2px}
+.lang-switch{display:flex;gap:2px}
+.lang-btn{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:4px 9px;border:1px solid transparent;border-radius:4px;cursor:pointer;background:none;transition:all .15s}
+.lang-btn:hover{color:var(--text)}
+.lang-btn.active{color:var(--lived);border-color:var(--lived-dim)}
+h1{font-family:var(--serif);font-size:clamp(36px,6vw,64px);font-weight:400;line-height:1.05;letter-spacing:-.02em}
+h1 em{font-style:italic;color:var(--lived)}
+.header-sub{margin-top:10px;font-size:14px;color:var(--muted);font-weight:300;max-width:480px}
+
+/* INPUTS */
+.inputs-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:40px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.field input,.field select{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 14px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a6560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+.field input:focus,.field select:focus{border-color:var(--lived)}
+.field input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+
+/* SUMMARY */
+.summary{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:24px}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat-val{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--lived);line-height:1}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:300}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:32px;border-bottom:1px solid var(--border)}
+.tab{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 16px 12px;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--lived);border-bottom-color:var(--lived)}
+.viz-panel{display:none}
+.viz-panel.active{display:block}
+
+/* JAR */
+.jar-wrap{display:flex;align-items:flex-start;gap:48px;padding:16px 0}
+#jar-svg{flex-shrink:0}
+.jar-legend{padding-top:16px;flex:1}
+.jar-pct{font-family:var(--mono);font-size:64px;font-weight:300;color:var(--lived);line-height:1;margin-bottom:4px}
+.jar-pct-sub{font-size:12px;color:var(--muted);margin-bottom:28px}
+.jar-items{display:flex;flex-direction:column;gap:10px}
+.jar-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.jar-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* WEEKS */
+.weeks-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px}
+.weeks-header h3{font-family:var(--serif);font-size:22px;font-weight:400}
+.weeks-meta{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right}
+#weeks-grid{display:flex;flex-wrap:wrap;gap:2px;max-width:100%}
+.week-dot{width:7px;height:7px;border-radius:1px;flex-shrink:0}
+
+/* CLOCK */
+.clock-wrap{display:flex;gap:48px;align-items:center;padding:16px 0}
+#clock-svg{flex-shrink:0}
+.clock-info{flex:1}
+.clock-time{font-family:var(--mono);font-size:56px;font-weight:300;color:var(--lived);line-height:1;letter-spacing:-.02em}
+.clock-sublabel{font-size:12px;color:var(--muted);margin-top:5px;margin-bottom:28px;line-height:1.4}
+.clock-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--border)}
+.clock-row:last-child{border-bottom:none}
+.clock-row-lbl{font-size:12px;color:var(--muted)}
+.clock-row-val{font-family:var(--mono);font-size:13px;color:var(--text)}
+
+/* DECADES */
+.decades-header{margin-bottom:24px}
+.decades-header h3{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:4px}
+.decades-sub{font-size:12px;color:var(--muted)}
+.decade-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.decade-label{font-family:var(--mono);font-size:11px;color:var(--muted);width:40px;text-align:right;flex-shrink:0}
+.decade-bar-wrap{flex:1;height:20px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.decade-bar{height:100%;border-radius:3px}
+.decade-bar.lived{background:var(--lived)}
+.decade-bar.partial{background:linear-gradient(90deg,var(--lived) var(--fp),var(--surface2) var(--fp));width:100%}
+.decade-bar.future{background:var(--surface2);width:100%}
+.decade-pct{font-family:var(--mono);font-size:10px;color:var(--muted);width:36px;flex-shrink:0}
+
+/* MILESTONES */
+.milestones-section{margin-top:56px}
+.section-title{font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:6px}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.milestones-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.milestone-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s}
+.milestone-card:hover{border-color:var(--lived-dim)}
+.milestone-age{font-family:var(--mono);font-size:32px;font-weight:300;color:var(--lived);line-height:1;margin-bottom:2px}
+.milestone-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-family:var(--mono)}
+.milestone-time{font-family:var(--mono);font-size:13px;color:var(--text);margin-bottom:4px}
+.milestone-days{font-size:11px;color:var(--muted);margin-bottom:16px}
+.milestone-mini-bar{height:3px;background:var(--surface2);border-radius:2px;margin-bottom:14px;overflow:hidden}
+.milestone-mini-fill{height:100%;border-radius:2px;background:var(--lived)}
+.milestone-fact{font-size:11px;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px;font-style:italic}
+.milestone-past{opacity:.65}
+.milestone-past .milestone-age{color:var(--muted)}
+.milestone-past .milestone-mini-fill{background:var(--muted2)}
+
+/* LEGEND ROW */
+.legend-row{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* FOOTER */
+.footer-note{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--muted2);line-height:1.6;font-style:italic;text-align:center}
+
+@media(max-width:600px){
+  .jar-wrap,.clock-wrap{flex-direction:column;align-items:center}
+  .jar-pct{font-size:48px}
+  .clock-time{font-size:40px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="header-top">
+    <div class="header-label" data-i18n="mori">memento mori</div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" onclick="setLang('ua')">UA</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+  <h1 data-i18n="title"></h1>
+  <p class="header-sub" data-i18n="subtitle"></p>
+</header>
+
+<div class="inputs-row">
+  <div class="field">
+    <label data-i18n="labelBirth"></label>
+    <input type="date" id="birthdate">
+  </div>
+  <div class="field">
+    <label data-i18n="labelGender"></label>
+    <select id="gender">
+      <option value="m" data-i18n="genderM"></option>
+      <option value="f" data-i18n="genderF"></option>
+    </select>
+  </div>
+  <div class="field">
+    <label data-i18n="labelCountry"></label>
+    <select id="country">
+      <option value="world">🌍 World (avg)</option>
+      <option value="jp">🇯🇵 Japan</option>
+      <option value="au">🇦🇺 Australia</option>
+      <option value="se">🇸🇪 Sweden</option>
+      <option value="es">🇪🇸 Spain</option>
+      <option value="it">🇮🇹 Italy</option>
+      <option value="fr">🇫🇷 France</option>
+      <option value="ca">🇨🇦 Canada</option>
+      <option value="no">🇳🇴 Norway</option>
+      <option value="kr">🇰🇷 S. Korea</option>
+      <option value="de">🇩🇪 Germany</option>
+      <option value="uk">🇬🇧 UK</option>
+      <option value="us">🇺🇸 USA</option>
+      <option value="cn">🇨🇳 China</option>
+      <option value="br">🇧🇷 Brazil</option>
+      <option value="ua">🇺🇦 Ukraine</option>
+      <option value="ru">🇷🇺 Russia</option>
+      <option value="in">🇮🇳 India</option>
+    </select>
+  </div>
+</div>
+
+<div class="summary">
+  <div class="stat"><div class="stat-val" id="s-age">—</div><div class="stat-lbl" data-i18n="sAge"></div></div>
+  <div class="stat"><div class="stat-val" id="s-lived">—</div><div class="stat-lbl" data-i18n="sLived"></div></div>
+  <div class="stat"><div class="stat-val" id="s-remaining">—</div><div class="stat-lbl" data-i18n="sRemaining"></div></div>
+  <div class="stat"><div class="stat-val" id="s-pct">—</div><div class="stat-lbl" data-i18n="sPct"></div></div>
+  <div class="stat"><div class="stat-val" id="s-expectancy">—</div><div class="stat-lbl" data-i18n="sExp"></div></div>
+  <div class="stat"><div class="stat-val" id="s-days">—</div><div class="stat-lbl" data-i18n="sDays"></div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="jar" data-i18n="tabJar"></button>
+  <button class="tab" data-tab="weeks" data-i18n="tabWeeks"></button>
+  <button class="tab" data-tab="clock" data-i18n="tabClock"></button>
+  <button class="tab" data-tab="decades" data-i18n="tabDecades"></button>
+</div>
+
+<!-- JAR -->
+<div class="viz-panel active" id="tab-jar">
+  <div class="jar-wrap">
+    <svg id="jar-svg" width="180" height="300" viewBox="0 0 180 300"></svg>
+    <div class="jar-legend">
+      <div class="jar-pct" id="jar-pct-num">0%</div>
+      <div class="jar-pct-sub" data-i18n="jarSub"></div>
+      <div class="jar-items">
+        <div class="jar-item">
+          <div class="jar-dot" style="background:var(--lived)"></div>
+          <span id="jar-lived-years"></span>
+        </div>
+        <div class="jar-item">
+          <div class="jar-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>
+          <span id="jar-remaining-years"></span>
+        </div>
+        <div class="jar-item" style="margin-top:6px">
+          <div class="jar-dot" style="background:transparent"></div>
+          <span id="jar-today-note" style="font-size:11px;font-style:italic"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WEEKS -->
+<div class="viz-panel" id="tab-weeks">
+  <div class="weeks-header">
+    <h3 data-i18n="weeksTitle"></h3>
+    <div class="weeks-meta" id="weeks-meta"></div>
+  </div>
+  <div id="weeks-grid"></div>
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--lived);border-radius:1px"></div><span data-i18n="weeksLived"></span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border);border-radius:1px"></div><span data-i18n="weeksFuture"></span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--danger);border-radius:1px"></div><span data-i18n="weeksCurrent"></span></div>
+  </div>
+</div>
+
+<!-- CLOCK -->
+<div class="viz-panel" id="tab-clock">
+  <div class="clock-wrap">
+    <svg id="clock-svg" width="280" height="280" viewBox="0 0 280 280"></svg>
+    <div class="clock-info">
+      <div class="clock-time" id="clock-time-display">—</div>
+      <div class="clock-sublabel" id="clock-sublabel"></div>
+      <div>
+        <div class="clock-row"><span class="clock-row-lbl" data-i18n="arcLivedH"></span><span class="clock-row-val" id="arc-hours">—</span></div>
+        <div class="clock-row"><span class="clock-row-lbl" data-i18n="arcLivedD"></span><span class="clock-row-val" id="arc-days-num">—</span></div>
+        <div class="clock-row"><span class="clock-row-lbl" data-i18n="arcLivedW"></span><span class="clock-row-val" id="arc-weeks-num">—</span></div>
+        <div class="clock-row"><span class="clock-row-lbl" data-i18n="arcRemD"></span><span class="clock-row-val" id="arc-rem-days">—</span></div>
+        <div class="clock-row"><span class="clock-row-lbl" data-i18n="arcRemSat"></span><span class="clock-row-val" id="arc-saturdays">—</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DECADES -->
+<div class="viz-panel" id="tab-decades">
+  <div class="decades-header">
+    <h3 data-i18n="decadesTitle"></h3>
+    <div class="decades-sub" data-i18n="decadesSub"></div>
+  </div>
+  <div id="decades-container"></div>
+</div>
+
+<!-- MILESTONES -->
+<div class="milestones-section">
+  <div class="section-title" data-i18n="msTitle"></div>
+  <div class="section-sub" data-i18n="msSub"></div>
+  <div class="milestones-grid" id="milestones-grid"></div>
+</div>
+
+<div class="footer-note" data-i18n="footer"></div>
+</div>
+
+<script>
+// ─── TRANSLATIONS ─────────────────────────────────────────────
+const LANGS = {
+  ru: {
+    mori:'memento mori',
+    title:'Жизнь в <em>числах</em>',
+    subtitle:'Визуализация прожитого и оставшегося. Каждый день — невозобновляемый ресурс.',
+    labelBirth:'Дата рождения', labelGender:'Пол', labelCountry:'Страна',
+    genderM:'Мужской', genderF:'Женский',
+    sAge:'возраст', sLived:'прожито лет', sRemaining:'осталось лет',
+    sPct:'использовано', sExp:'ожидаемый возраст', sDays:'дней позади',
+    tabJar:'Сосуд', tabWeeks:'Недели', tabClock:'Часы жизни', tabDecades:'Декады',
+    jarSub:'жизни прожито',
+    jarLivedYears:y=>`${y} лет прожито`,
+    jarRemYears:y=>`${y} лет осталось`,
+    jarToday:d=>'Сегодня '+d,
+    weeksTitle:'Каждый квадрат — одна неделя жизни',
+    weeksMeta:(l,tot)=>`${l} прожито / ${tot} всего`,
+    weeksLived:'прожито', weeksFuture:'впереди', weeksCurrent:'текущая неделя',
+    clockLine1:(time)=>`Сейчас ты на ${time}`,
+    clockLine2:(rh,rm)=>`До полуночи осталось ${rh}ч ${rm}мин`,
+    clockNoon:'полдень — рождение', clockMidnight:'полночь — смерть',
+    arcLivedH:'Прожито часов', arcLivedD:'Прожито дней', arcLivedW:'Прожито недель',
+    arcRemD:'Осталось дней', arcRemSat:'Осталось суббот',
+    decadesTitle:'Жизнь по декадам', decadesSub:'Каждая полоса — 10 лет',
+    msTitle:'До рубежа', msSub:'Сколько осталось до ключевых возрастов — и что происходит с телом',
+    passed:'пройдено', yearsLbl:'лет',
+    agoY:y=>`${y} лет назад`, agoD:d=>`${d} дней позади`,
+    leftYM:(y,m)=>y>0?`${y} л ${m} м`:`${m} месяцев`,
+    leftD:d=>`${d} дней`,
+    footer:'Данные о продолжительности жизни — ВОЗ / World Bank, 2023–2024.\nЭто статистика, а не приговор. Наука о долголетии меняет правила.',
+    youngFact:'Вы молоды. Инвестируйте в здоровье сейчас — ROI максимальный.',
+  },
+  ua: {
+    mori:'memento mori',
+    title:'Життя в <em>числах</em>',
+    subtitle:'Візуалізація прожитого і того, що попереду. Кожен день — невідновний ресурс.',
+    labelBirth:'Дата народження', labelGender:'Стать', labelCountry:'Країна',
+    genderM:'Чоловіча', genderF:'Жіноча',
+    sAge:'вік', sLived:'прожито років', sRemaining:'залишилось років',
+    sPct:'використано', sExp:'очікуваний вік', sDays:'днів позаду',
+    tabJar:'Посудина', tabWeeks:'Тижні', tabClock:'Годинник', tabDecades:'Декади',
+    jarSub:'життя прожито',
+    jarLivedYears:y=>`${y} років прожито`,
+    jarRemYears:y=>`${y} років залишилось`,
+    jarToday:d=>'Сьогодні '+d,
+    weeksTitle:'Кожен квадрат — один тиждень життя',
+    weeksMeta:(l,tot)=>`${l} прожито / ${tot} всього`,
+    weeksLived:'прожито', weeksFuture:'попереду', weeksCurrent:'поточний тиждень',
+    clockLine1:(time)=>`Зараз ти на ${time}`,
+    clockLine2:(rh,rm)=>`До опівночі залишилось ${rh}г ${rm}хв`,
+    clockNoon:'полудень — народження', clockMidnight:'опівніч — смерть',
+    arcLivedH:'Прожито годин', arcLivedD:'Прожито днів', arcLivedW:'Прожито тижнів',
+    arcRemD:'Залишилось днів', arcRemSat:'Залишилось субот',
+    decadesTitle:'Життя за декадами', decadesSub:'Кожна смуга — 10 років',
+    msTitle:'До рубежу', msSub:'Скільки залишилось до ключових вікових позначок — і що відбувається з тілом',
+    passed:'пройдено', yearsLbl:'років',
+    agoY:y=>`${y} років тому`, agoD:d=>`${d} днів позаду`,
+    leftYM:(y,m)=>y>0?`${y} р ${m} м`:`${m} місяців`,
+    leftD:d=>`${d} днів`,
+    footer:'Дані про тривалість життя — ВООЗ / World Bank, 2023–2024.\nЦе статистика, а не вирок. Наука про довголіття змінює правила.',
+    youngFact:'Ви молоді. Інвестуйте у здоров\'я зараз — ROI максимальний.',
+  },
+  en: {
+    mori:'memento mori',
+    title:'Life in <em>numbers</em>',
+    subtitle:'Visualising time lived and time remaining. Every day is a non-renewable resource.',
+    labelBirth:'Date of birth', labelGender:'Sex', labelCountry:'Country',
+    genderM:'Male', genderF:'Female',
+    sAge:'age', sLived:'years lived', sRemaining:'years left',
+    sPct:'elapsed', sExp:'life expectancy', sDays:'days behind',
+    tabJar:'Vessel', tabWeeks:'Weeks', tabClock:'Life Clock', tabDecades:'Decades',
+    jarSub:'of life elapsed',
+    jarLivedYears:y=>`${y} years lived`,
+    jarRemYears:y=>`${y} years remaining`,
+    jarToday:d=>'Today, '+d,
+    weeksTitle:'Each square is one week of life',
+    weeksMeta:(l,tot)=>`${l} lived / ${tot} total`,
+    weeksLived:'lived', weeksFuture:'ahead', weeksCurrent:'current week',
+    clockLine1:(time)=>`You are at ${time}`,
+    clockLine2:(rh,rm)=>`${rh}h ${rm}m until midnight`,
+    clockNoon:'noon — birth', clockMidnight:'midnight — death',
+    arcLivedH:'Hours lived', arcLivedD:'Days lived', arcLivedW:'Weeks lived',
+    arcRemD:'Days remaining', arcRemSat:'Saturdays left',
+    decadesTitle:'Life by decade', decadesSub:'Each bar = 10 years',
+    msTitle:'To the milestone', msSub:'Time remaining to key ages — and what happens to the body',
+    passed:'passed', yearsLbl:'years',
+    agoY:y=>`${y} years ago`, agoD:d=>`${d} days ago`,
+    leftYM:(y,m)=>y>0?`${y}y ${m}m`:`${m} months`,
+    leftD:d=>`${d} days`,
+    footer:'Life expectancy data — WHO / World Bank, 2023–2024.\nThis is statistics, not a verdict. Longevity science is rewriting the rules.',
+    youngFact:'You are young. Invest in your health now — the ROI is highest.',
+  }
+};
+
+let lang = 'ru';
+function t(key,...args) {
+  const v = LANGS[lang][key];
+  return typeof v==='function' ? v(...args) : (v??'');
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const v = LANGS[lang][key];
+    if (v===undefined) return;
+    if (key==='title') { el.innerHTML=v; return; }
+    if (key==='footer') { el.innerHTML=v.replace('\n','<br>'); return; }
+    if (typeof v==='string') el.textContent=v;
+  });
+}
+
+function setLang(l) {
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+  applyI18n();
+  compute();
+}
+
+// ─── LIFE EXPECTANCY DATA ─────────────────────────────────────
+const LE = {
+  world:{m:70,f:75}, jp:{m:81,f:87}, au:{m:81,f:85}, se:{m:81,f:85},
+  es:{m:81,f:86}, it:{m:81,f:85}, fr:{m:79,f:85}, ca:{m:80,f:84},
+  no:{m:81,f:85}, kr:{m:80,f:86}, de:{m:78,f:83}, uk:{m:79,f:83},
+  us:{m:74,f:80}, cn:{m:75,f:80}, br:{m:72,f:79}, ua:{m:67,f:77},
+  ru:{m:66,f:76}, in:{m:68,f:71},
+};
+
+const FACTS = {
+  ru:{
+    30:{m:"Тестостерон падает ~1%/год. Мышечная масса достигла пика и начнёт убывать.",f:"Фертильность снижается. Яйцеклетки стареют быстрее всего остального."},
+    40:{m:"~50% мужчин — заметное облысение. Метаболизм замедляется на 2–5% за декаду.",f:"Начало перименопаузы. Плотность костей снижается ~1%/год."},
+    50:{m:"~52% — та или иная форма ЭД. Рекомендован скрининг рака простаты.",f:"Менопауза в среднем в 51 год. Риск сердечно-сосудистых заболеваний резко растёт."},
+    60:{m:"~70% — гиперплазия простаты. Слух слабее на ~30%.",f:"Ускоренная потеря костной массы. Риск остеопороза у каждой третьей."},
+    70:{m:"50% — минимум одно хроническое заболевание. Мышцы на 30–40% ниже пика.",f:"Аналогично, но женщины в 70 статистически здоровее мужчин."},
+    80:{m:"80% имеют ≥2 хронических заболевания. Когнитивный резерв — ключ к качеству жизни.",f:"Женщины живут в среднем на 5–7 лет дольше мужчин."},
+  },
+  ua:{
+    30:{m:"Тестостерон знижується ~1%/рік. М'язова маса досягла піку.",f:"Фертильність знижується. Яйцеклітини старіють швидше всього."},
+    40:{m:"~50% чоловіків — помітне облисіння. Метаболізм сповільнюється.",f:"Початок перименопаузи. Щільність кісток знижується ~1%/рік."},
+    50:{m:"~52% — еректильна дисфункція. Скринінг раку простати.",f:"Менопауза в середньому в 51 рік. Ризик серцево-судинних різко зростає."},
+    60:{m:"~70% — гіперплазія простати. Слух слабший на ~30%.",f:"Прискорена втрата кісткової маси. Ризик остеопорозу у кожної третьої."},
+    70:{m:"50% — мінімум одне хронічне захворювання. М'язи на 30–40% нижче піку.",f:"Аналогічно, але жінки у 70 статистично здоровіші за чоловіків."},
+    80:{m:"80% мають ≥2 хронічних захворювання. Когнітивний резерв — ключовий.",f:"Жінки живуть в середньому на 5–7 років довше."},
+  },
+  en:{
+    30:{m:"Testosterone drops ~1%/yr. Muscle mass has peaked and will slowly decline.",f:"Fertility begins declining. Eggs age faster than the rest of you."},
+    40:{m:"~50% of men show noticeable hair loss. Metabolism slows 2–5% per decade.",f:"Perimenopause may begin. Bone density drops ~1%/yr."},
+    50:{m:"~52% experience some erectile dysfunction. Prostate cancer screening recommended.",f:"Menopause at ~51 on average. Cardiovascular risk climbs sharply."},
+    60:{m:"~70% have benign prostate enlargement. Hearing ~30% weaker.",f:"Bone loss accelerates. 1 in 3 women develop osteoporosis."},
+    70:{m:"50% have at least one chronic condition. Muscle mass 30–40% below peak.",f:"Similar picture, but women at 70 are statistically healthier than men."},
+    80:{m:"80% have ≥2 chronic conditions. Cognitive reserve is the key to quality of life.",f:"Women live ~5–7 years longer than men on average."},
+  }
+};
+
+function getFact(age, gender) {
+  const table = FACTS[lang]||FACTS.ru;
+  if (age<30) return t('youngFact');
+  const keys=[30,40,50,60,70,80];
+  let best=30;
+  for (const k of keys) { if (k<=age) best=k; }
+  return table[best]?.[gender]||'';
+}
+
+// ─── UTILS ────────────────────────────────────────────────────
+function fmtBig(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+function svgEl(tag) { return document.createElementNS('http://www.w3.org/2000/svg',tag); }
+function setA(el,attrs) { for(const[k,v]of Object.entries(attrs)) el.setAttribute(k,v); }
+function mk(tag,cls,text) { const el=document.createElement(tag); el.className=cls; if(text!==undefined) el.textContent=text; return el; }
+
+// ─── MAIN COMPUTE ─────────────────────────────────────────────
+function compute() {
+  const bdStr = document.getElementById('birthdate').value;
+  const gender = document.getElementById('gender').value;
+  const country = document.getElementById('country').value;
+  if (!bdStr) return;
+  const bd=new Date(bdStr), now=new Date();
+  const exp=LE[country][gender];
+  const livedMs=now-bd;
+  const livedY=livedMs/(365.25*24*3600*1000);
+  const remY=Math.max(0,exp-livedY);
+  const pct=Math.min(1,livedY/exp);
+  const livedDays=Math.floor(livedMs/(24*3600*1000));
+  const livedWeeks=Math.floor(livedDays/7);
+  const livedHours=Math.floor(livedMs/(3600*1000));
+  const totalWeeks=Math.round(exp*52.18);
+  const remDays=Math.max(0,Math.round(remY*365.25));
+  const remSat=Math.round(remDays/7);
+
+  updateSummary(livedY,remY,pct,exp,livedDays);
+  drawJar(pct,livedY,remY);
+  drawWeeks(livedWeeks,totalWeeks);
+  drawClock(pct,livedY,exp,livedHours,livedDays,livedWeeks,remDays,remSat);
+  drawDecades(livedY,exp);
+  drawMilestones(bd,now,exp,gender);
+}
+
+// ─── SUMMARY ─────────────────────────────────────────────────
+function updateSummary(livedY,remY,pct,exp,days) {
+  const ageY=Math.floor(livedY), ageM=Math.floor((livedY-ageY)*12);
+  const sep = lang==='en' ? ['y ','m'] : [' л ',' м'];
+  document.getElementById('s-age').textContent=ageY+sep[0]+ageM+sep[1];
+  document.getElementById('s-lived').textContent=livedY.toFixed(1);
+  document.getElementById('s-remaining').textContent=remY.toFixed(1);
+  document.getElementById('s-pct').textContent=(pct*100).toFixed(1)+'%';
+  document.getElementById('s-expectancy').textContent=exp;
+  document.getElementById('s-days').textContent=fmtBig(days);
+}
+
+// ─── JAR ─────────────────────────────────────────────────────
+function drawJar(pct,livedY,remY) {
+  const svg=document.getElementById('jar-svg');
+  svg.innerHTML='';
+  const W=180,H=300,neck=32,body=86,topY=30,botY=270,jarH=botY-topY;
+
+  const JP=`M${W/2-neck},${topY} Q${W/2-body},${topY+20} ${W/2-body},${topY+50}
+    L${W/2-body},${botY-10} Q${W/2-body},${botY} ${W/2},${botY}
+    Q${W/2+body},${botY} ${W/2+body},${botY-10}
+    L${W/2+body},${topY+50} Q${W/2+body},${topY+20} ${W/2+neck},${topY} Z`;
+
+  const defs=svgEl('defs'), clip=svgEl('clipPath');
+  clip.setAttribute('id','jc'); const cp=svgEl('path'); cp.setAttribute('d',JP);
+  clip.appendChild(cp); defs.appendChild(clip); svg.appendChild(defs);
+
+  const bg=svgEl('rect');
+  setA(bg,{x:0,y:0,width:W,height:H,fill:'#1c1c1c','clip-path':'url(#jc)'});
+  svg.appendChild(bg);
+
+  const fillH=jarH*pct, fillY=botY-fillH;
+  const fill=svgEl('rect');
+  setA(fill,{x:0,y:fillY,width:W,height:fillH,fill:'#c8a96e',opacity:.85,'clip-path':'url(#jc)'});
+  svg.appendChild(fill);
+
+  if (pct>0&&pct<1) {
+    const wx1=W/2-body+4, wx2=W/2+body-4;
+    const wave=svgEl('path');
+    setA(wave,{d:`M${wx1},${fillY} Q${W/2},${fillY-5} ${wx2},${fillY}`,fill:'none',stroke:'#e8c98e','stroke-width':1.5,opacity:.6});
+    svg.appendChild(wave);
+  }
+
+  const border=svgEl('path');
+  setA(border,{d:JP,fill:'none',stroke:'#3a3530','stroke-width':1.5});
+  svg.appendChild(border);
+
+  // Tick marks — labels inside jar, text-anchor end, pushed left
+  for (let i=1;i<4;i++) {
+    const ty=topY+(jarH*i/4);
+    // tick line inside jar wall
+    const lx1=W/2+body-16, lx2=W/2+body-10;
+    const tick=svgEl('line');
+    setA(tick,{x1:lx1,x2:lx2,y1:ty,y2:ty,stroke:'#3a3530','stroke-width':1});
+    svg.appendChild(tick);
+    // label: anchor=end, x=lx1-3 → always inside
+    const tlbl=svgEl('text');
+    setA(tlbl,{x:lx1-4,y:ty+4,'font-size':9,fill:'#5a5550','font-family':'monospace','text-anchor':'end'});
+    tlbl.textContent=(100-i*25)+'%';
+    svg.appendChild(tlbl);
+  }
+
+  document.getElementById('jar-pct-num').textContent=(pct*100).toFixed(1)+'%';
+  document.getElementById('jar-lived-years').textContent=t('jarLivedYears',livedY.toFixed(1));
+  document.getElementById('jar-remaining-years').textContent=t('jarRemYears',remY.toFixed(1));
+  const locale=lang==='en'?'en-GB':lang==='ua'?'uk-UA':'ru-RU';
+  document.getElementById('jar-today-note').textContent=t('jarToday',new Date().toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'}));
+}
+
+// ─── WEEKS ────────────────────────────────────────────────────
+function drawWeeks(livedW,totalW) {
+  const grid=document.getElementById('weeks-grid');
+  grid.innerHTML='';
+  document.getElementById('weeks-meta').textContent=t('weeksMeta',fmtBig(livedW),fmtBig(totalW));
+  const dt=Math.min(totalW,5200), dl=Math.min(livedW,dt);
+  for (let i=0;i<dt;i++) {
+    const d=document.createElement('div'); d.className='week-dot';
+    if (i<dl-1) { d.style.background='var(--lived)'; d.style.opacity='.7'; }
+    else if (i===dl-1) { d.style.background='var(--danger)'; }
+    else { d.style.background='var(--surface2)'; d.style.border='1px solid var(--border)'; }
+    grid.appendChild(d);
+  }
+}
+
+// ─── CLOCK ───────────────────────────────────────────────────
+// Metaphor: born at noon (12:00), die at midnight (00:00/24:00)
+// pct=0 → hand at 12 (top), pct=1 → hand back at 12 (full rotation)
+function drawClock(pct,livedY,exp,hours,days,weeks,remDays,remSat) {
+  const svg=document.getElementById('clock-svg');
+  svg.innerHTML='';
+  const cx=140,cy=140,R=110,sw=10;
+  const toRad=d=>d*Math.PI/180;
+  const px=(a,r)=>cx+r*Math.cos(toRad(a));
+  const py=(a,r)=>cy+r*Math.sin(toRad(a));
+
+  // Life time: 12:00 (noon) + pct*12 hours → up to 24:00 (midnight)
+  const lifeH=12+pct*12;
+  const hh=Math.floor(lifeH)%24;
+  const mm=Math.floor((lifeH%1)*60);
+  const timeStr=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+
+  const remHTot=(1-pct)*12;
+  const remH=Math.floor(remHTot);
+  const remM=Math.floor((remHTot%1)*60);
+
+  // Hand angle: noon = top = -90°; full rotation at pct=1 = 270° = same as -90°
+  const handAng=-90+pct*360;
+
+  // Clock face (dark circle)
+  const face=svgEl('circle');
+  setA(face,{cx,cy,r:R+10,fill:'#0d0d0d',stroke:'#222','stroke-width':1});
+  svg.appendChild(face);
+
+  // Elapsed wedge (very subtle)
+  if (pct>0.005&&pct<0.999) {
+    const a2=handAng;
+    const large=pct>0.5?1:0;
+    const wedge=svgEl('path');
+    const d=`M${cx},${cy} L${px(-90,R)},${py(-90,R)} A${R},${R} 0 ${large} 1 ${px(a2,R)},${py(a2,R)} Z`;
+    setA(wedge,{d,fill:'#c8a96e',opacity:.06});
+    svg.appendChild(wedge);
+  }
+
+  // Track ring
+  const track=svgEl('circle');
+  setA(track,{cx,cy,r:R,fill:'none',stroke:'#1e1e1e','stroke-width':sw+2});
+  svg.appendChild(track);
+  const track2=svgEl('circle');
+  setA(track2,{cx,cy,r:R,fill:'none',stroke:'#232323','stroke-width':sw});
+  svg.appendChild(track2);
+
+  // Progress arc (elapsed)
+  if (pct>0.005) {
+    const a1=-90, a2=pct>=0.999?a1+359.99:handAng;
+    const large=(a2-a1)>180?1:0;
+    const arcPath=`M${px(a1,R)},${py(a1,R)} A${R},${R} 0 ${large} 1 ${px(a2,R)},${py(a2,R)}`;
+    const arc=svgEl('path');
+    setA(arc,{d:arcPath,fill:'none',stroke:'#c8a96e','stroke-width':sw,'stroke-linecap':'round'});
+    svg.appendChild(arc);
+    // glow dot at tip
+    const tip=svgEl('circle');
+    setA(tip,{cx:px(handAng,R),cy:py(handAng,R),r:sw/2+2,fill:'#e8c98e',opacity:.85});
+    svg.appendChild(tip);
+  }
+
+  // Hour tick marks (12 ticks)
+  for (let i=0;i<12;i++) {
+    const a=-90+i*30;
+    const isMaj=(i%3===0);
+    const r1=R-sw/2-2, r2=isMaj?r1-8:r1-4;
+    const tk=svgEl('line');
+    setA(tk,{x1:px(a,r1),y1:py(a,r1),x2:px(a,r2),y2:py(a,r2),
+      stroke:isMaj?'#4a4540':'#2a2a2a','stroke-width':isMaj?1.5:0.75});
+    svg.appendChild(tk);
+  }
+
+  // Time labels at 12, 3, 6, 9 (as life-clock times)
+  const timeLabelR=R-sw/2-20;
+  // 12 (top) = noon/birth and midnight/death — show both
+  // We put "12" at the top, but add two small sub-labels
+  const labelData=[
+    {a:-90, main:'12', isDouble:true},
+    {a:0,   main:'15', isDouble:false},
+    {a:90,  main:'18', isDouble:false},
+    {a:180, main:'21', isDouble:false},
+  ];
+  labelData.forEach(({a,main,isDouble})=>{
+    const lbl=svgEl('text');
+    setA(lbl,{x:px(a,timeLabelR),y:py(a,timeLabelR)+4,'text-anchor':'middle',
+      'font-size':10,fill:'#5a5550','font-family':'DM Mono,monospace'});
+    lbl.textContent=main;
+    svg.appendChild(lbl);
+  });
+
+  // Noon annotation (bottom of the 12 label, inside face)
+  const noonAnnot=svgEl('text');
+  setA(noonAnnot,{x:cx,y:cy-(timeLabelR-2),'text-anchor':'middle',
+    'font-size':7,fill:'#4a4540','font-family':'DM Mono,monospace'});
+  noonAnnot.textContent=t('clockNoon');
+  svg.appendChild(noonAnnot);
+
+  // Midnight annotation (just below noon annotation, smaller)
+  const midAnnot=svgEl('text');
+  setA(midAnnot,{x:cx,y:cy-(timeLabelR-12),'text-anchor':'middle',
+    'font-size':6.5,fill:'#3a3530','font-family':'DM Mono,monospace'});
+  midAnnot.textContent=t('clockMidnight');
+  svg.appendChild(midAnnot);
+
+  // ── Clock hands ──
+  // Hour hand (main, long)
+  const handR=R-sw/2-10;
+  const hand=svgEl('line');
+  setA(hand,{x1:cx,y1:cy,x2:px(handAng,handR),y2:py(handAng,handR),
+    stroke:'#e8c98e','stroke-width':2.5,'stroke-linecap':'round'});
+  svg.appendChild(hand);
+  // Tail
+  const tail=svgEl('line');
+  setA(tail,{x1:cx,y1:cy,x2:px(handAng+180,16),y2:py(handAng+180,16),
+    stroke:'#7a5f32','stroke-width':1.5,'stroke-linecap':'round'});
+  svg.appendChild(tail);
+  // Center
+  const c1=svgEl('circle'); setA(c1,{cx,cy,r:5,fill:'#c8a96e'}); svg.appendChild(c1);
+  const c2=svgEl('circle'); setA(c2,{cx,cy,r:2.5,fill:'#0d0d0d'}); svg.appendChild(c2);
+
+  // Update right panel
+  document.getElementById('clock-time-display').textContent=timeStr;
+  document.getElementById('clock-sublabel').innerHTML=
+    t('clockLine1',timeStr)+'<br>'+t('clockLine2',remH,remM);
+  document.getElementById('arc-hours').textContent=fmtBig(hours);
+  document.getElementById('arc-days-num').textContent=fmtBig(days);
+  document.getElementById('arc-weeks-num').textContent=fmtBig(weeks);
+  document.getElementById('arc-rem-days').textContent=fmtBig(remDays);
+  document.getElementById('arc-saturdays').textContent=fmtBig(remSat);
+}
+
+// ─── DECADES ─────────────────────────────────────────────────
+function drawDecades(livedY,exp) {
+  const container=document.getElementById('decades-container');
+  container.innerHTML='';
+  const dec=Math.ceil(exp/10);
+  for (let d=0;d<dec;d++) {
+    const start=d*10, end=Math.min((d+1)*10,exp), len=end-start;
+    let fp=0, state='future';
+    if (livedY>=end) { fp=100; state='lived'; }
+    else if (livedY>start) { fp=((livedY-start)/len)*100; state='partial'; }
+
+    const row=document.createElement('div'); row.className='decade-row';
+    const lbl=mk('div','decade-label',start+'–'+end);
+    const bw=document.createElement('div'); bw.className='decade-bar-wrap';
+    const bar=mk('div','decade-bar '+state);
+    bar.style.width='100%';
+    if (state==='partial') bar.style.setProperty('--fp',fp.toFixed(1)+'%');
+    bw.appendChild(bar);
+    const pl=mk('div','decade-pct',state==='future'?'':(state==='lived'?'✓':fp.toFixed(0)+'%'));
+    row.appendChild(lbl); row.appendChild(bw); row.appendChild(pl);
+    container.appendChild(row);
+  }
+}
+
+// ─── MILESTONES ──────────────────────────────────────────────
+function drawMilestones(bd,now,exp,gender) {
+  const grid=document.getElementById('milestones-grid');
+  grid.innerHTML='';
+  for (const age of [30,40,50,60,70,80]) {
+    if (age>exp+8) continue;
+    const targetDate=new Date(bd);
+    targetDate.setFullYear(bd.getFullYear()+age);
+    const diffMs=targetDate-now;
+    const diffDays=Math.round(diffMs/(24*3600*1000));
+    const diffY=diffMs/(365.25*24*3600*1000);
+    const isPast=diffMs<0;
+    const currentAge=(now-bd)/(365.25*24*3600*1000);
+    const pctToTarget=Math.min(1,currentAge/age);
+
+    const card=mk('div','milestone-card'+(isPast?' milestone-past':''));
+    card.appendChild(mk('div','milestone-age',age));
+    card.appendChild(mk('div','milestone-lbl',isPast?t('passed'):t('yearsLbl')));
+
+    const timeEl=mk('div','milestone-time');
+    const daysEl=mk('div','milestone-days');
+    if (isPast) {
+      timeEl.textContent=t('agoY',Math.abs(Math.round(diffY*10)/10));
+      daysEl.textContent=t('agoD',fmtBig(Math.abs(diffDays)));
+    } else {
+      const yrs=Math.floor(diffY), months=Math.floor((diffY-yrs)*12);
+      timeEl.textContent=t('leftYM',yrs,months);
+      daysEl.textContent=t('leftD',fmtBig(diffDays));
+    }
+    card.appendChild(timeEl); card.appendChild(daysEl);
+
+    const mb=mk('div','milestone-mini-bar');
+    const mf=mk('div','milestone-mini-fill');
+    mf.style.width=(pctToTarget*100).toFixed(1)+'%';
+    mb.appendChild(mf); card.appendChild(mb);
+    card.appendChild(mk('div','milestone-fact',getFact(age,gender)));
+    grid.appendChild(card);
+  }
+}
+
+// ─── TABS + INIT ─────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.viz-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  });
+});
+['birthdate','gender','country'].forEach(id=>
+  document.getElementById(id).addEventListener('change',compute)
+);
+
+const defDate=new Date();
+defDate.setFullYear(defDate.getFullYear()-30);
+document.getElementById('birthdate').value=defDate.toISOString().slice(0,10);
+applyI18n();
+compute();
+</script>
+</body>
+</html>
