@@ -368,7 +368,7 @@ h1 em{font-style:italic;color:var(--lived)}
         </div>
       </div>
       <div class="pay-card" onclick="handleBank()">
-        <div class="pay-icon">🏦</div>
+        <div class="pay-icon">💳</div>
         <div>
           <div class="pay-name" data-i18n="bankName"></div>
           <div class="pay-desc" data-i18n="bankDesc"></div>
@@ -384,7 +384,7 @@ h1 em{font-style:italic;color:var(--lived)}
         <div class="crypto-address-label" data-i18n="cryptoTap"></div>
         <div class="crypto-address" onclick="copyAddr('btc-addr','btc-copied')" title="Copy address">
           <span id="btc-addr">bc1qtu4k6kaddwjaldhah4cj2g3a66v</span>
-          <span class="copy-icon">⎘</span>
+          <span class="copy-icon">📝</span>
         </div>
         <div class="copied-hint" id="btc-copied"></div>
         <div class="qr-wrap" id="btc-qr"></div>
@@ -395,7 +395,7 @@ h1 em{font-style:italic;color:var(--lived)}
         <div class="crypto-address-label" data-i18n="cryptoTap"></div>
         <div class="crypto-address" onclick="copyAddr('eth-addr','eth-copied')" title="Copy address">
           <span id="eth-addr">0xF153e3a488429c18bfDc112fFd7Cc84117a22cB1</span>
-          <span class="copy-icon">⎘</span>
+          <span class="copy-icon">📝</span>
         </div>
         <div class="copied-hint" id="eth-copied"></div>
         <div class="qr-wrap" id="eth-qr"></div>
@@ -472,16 +472,16 @@ const LANGS = {
     leftYM:(y,m)=>y>0?`${y}y ${m}m`:`${m} months`,
     leftD:d=>`${d} days`,
     youngFact:'You are young. Invest in your health now — the ROI is highest.',
-    footer:'Life expectancy data — WHO / World Bank, 2023–2024.\nThis is statistics, not a verdict. Longevity science is rewriting the rules.',
+    footer:'This is statistics, not a verdict. Life extension is rewriting the rules.\nMade by Markel Kori.',
     donateBtnLabel:'Donate',
     footerDonateTitle:'Support the mission',
-    footerDonateSub:'Help advance longevity research and science communication.',
-    donateTitle:'Support longevity',
-    donateSub:'Every contribution helps advance research and education on ageing.',
+    footerDonateSub:'Please help promote the science of extending life.',
+    donateTitle:'Support the mission',
+    donateSub:'Every contribution helps the author promote ideas for extending life.',
     donateAmountLabel:'Select amount',
     amt10:'small support', amt25:'recommended', amt100:'generous', amtOtherVal:'Other', amtOther:'any amount',
     donateMethodLabel:'Payment method',
-    paypalDesc:'fast & secure', bankName:'Bank transfer', bankDesc:'Stripe & Link',
+    paypalDesc:'fast & secure', bankName:'Bank transfer', bankDesc:'via Stripe & Link',
     donateCryptoLabel:'Crypto',
     cryptoTap:'tap to copy',
     copiedMsg:'Copied!',
@@ -514,16 +514,16 @@ const LANGS = {
     leftYM:(y,m)=>y>0?`${y} р ${m} м`:`${m} місяців`,
     leftD:d=>`${d} днів`,
     youngFact:'Ви молоді. Інвестуйте у здоров\'я зараз — ROI максимальний.',
-    footer:'Дані про тривалість життя — ВООЗ / World Bank, 2023–2024.\nЦе статистика, а не вирок. Наука про довголіття змінює правила.',
+    footer:'Це статистика, а не вирок. Продовження життя змінює правила.\nЗроблено Маркелом Корі.',
     donateBtnLabel:'Підтримати',
     footerDonateTitle:'Підтримати місію',
-    footerDonateSub:'Допоможіть просувати науку про довголіття.',
-    donateTitle:'Підтримати довголіття',
-    donateSub:'Кожен внесок допомагає просувати дослідження та освіту у сфері старіння.',
+    footerDonateSub:'Допоможіть популяризувати науку про продовження життя.',
+    donateTitle:'Підтримати місію',
+    donateSub:'Кожен внесок допомагає автору поширювати ідеї продовження життя.',
     donateAmountLabel:'Виберіть суму',
     amt10:'невелика підтримка', amt25:'рекомендуємо', amt100:'щедро', amtOtherVal:'Інша', amtOther:'будь-яка сума',
     donateMethodLabel:'Спосіб оплати',
-    paypalDesc:'швидко та безпечно', bankName:'Банківський переказ', bankDesc:'Stripe & Link',
+    paypalDesc:'швидко та безпечно', bankName:'Банківський переказ', bankDesc:'via Stripe & Link',
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'натисніть щоб скопіювати',
     copiedMsg:'Скопійовано!',
@@ -556,16 +556,16 @@ const LANGS = {
     leftYM:(y,m)=>y>0?`${y} л ${m} м`:`${m} месяцев`,
     leftD:d=>`${d} дней`,
     youngFact:'Вы молоды. Инвестируйте в здоровье сейчас — ROI максимальный.',
-    footer:'Данные о продолжительности жизни — ВОЗ / World Bank, 2023–2024.\nЭто статистика, а не приговор. Наука о долголетии меняет правила.',
+    footer:'Это статистика, а не приговор. Наука о долголетии меняет правила.\nСделано Маркелом Кори.',
     donateBtnLabel:'Поддержать',
     footerDonateTitle:'Поддержать миссию',
-    footerDonateSub:'Помогите продвигать науку о долголетии.',
-    donateTitle:'Поддержать долголетие',
-    donateSub:'Каждый вклад помогает развивать исследования и образование о старении.',
+    footerDonateSub:'Помогите продвигать науку о продлении жизни.',
+    donateTitle:'Поддержать миссию',
+    donateSub:'Каждый вклад помогает автору продвигать идеи продления жизни.',
     donateAmountLabel:'Выберите сумму',
     amt10:'небольшая поддержка', amt25:'рекомендуем', amt100:'щедро', amtOtherVal:'Другая', amtOther:'любая сумма',
     donateMethodLabel:'Способ оплаты',
-    paypalDesc:'быстро и безопасно', bankName:'Банковский перевод', bankDesc:'Stripe & Link',
+    paypalDesc:'быстро и безопасно', bankName:'Банковский перевод', bankDesc:'via Stripe & Link',
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'нажмите чтобы скопировать',
     copiedMsg:'Скопировано!',
