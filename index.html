@@ -481,7 +481,7 @@ const LANGS = {
     donateAmountLabel:'Select amount',
     amt10:'small support', amt25:'recommended', amt100:'generous', amtOtherVal:'Other', amtOther:'any amount',
     donateMethodLabel:'Payment method',
-    paypalDesc:'fast & secure', bankName:'Bank transfer', bankDesc:'SEPA & international',
+    paypalDesc:'fast & secure', bankName:'Bank transfer', bankDesc:'Stripe & Link',
     donateCryptoLabel:'Crypto',
     cryptoTap:'tap to copy',
     copiedMsg:'Copied!',
@@ -523,7 +523,7 @@ const LANGS = {
     donateAmountLabel:'Виберіть суму',
     amt10:'невелика підтримка', amt25:'рекомендуємо', amt100:'щедро', amtOtherVal:'Інша', amtOther:'будь-яка сума',
     donateMethodLabel:'Спосіб оплати',
-    paypalDesc:'швидко та безпечно', bankName:'Банківський переказ', bankDesc:'SEPA та міжнародний',
+    paypalDesc:'швидко та безпечно', bankName:'Банківський переказ', bankDesc:'Stripe & Link',
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'натисніть щоб скопіювати',
     copiedMsg:'Скопійовано!',
@@ -565,7 +565,7 @@ const LANGS = {
     donateAmountLabel:'Выберите сумму',
     amt10:'небольшая поддержка', amt25:'рекомендуем', amt100:'щедро', amtOtherVal:'Другая', amtOther:'любая сумма',
     donateMethodLabel:'Способ оплаты',
-    paypalDesc:'быстро и безопасно', bankName:'Банковский перевод', bankDesc:'SEPA и международный',
+    paypalDesc:'быстро и безопасно', bankName:'Банковский перевод', bankDesc:'Stripe & Link',
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'нажмите чтобы скопировать',
     copiedMsg:'Скопировано!',
@@ -1030,13 +1030,11 @@ function selectAmount(el,val) {
 }
 
 function handlePayPal() {
-  // Replace with your PayPal.me or donate link
-  alert('PayPal link — replace this with your actual PayPal donate URL in the handlePayPal() function.');
+  window.open('https://www.paypal.com/paypalme/markelkori','_blank','noopener');
 }
 
 function handleBank() {
-  // Replace with bank transfer details or redirect
-  alert('Bank transfer details — add your IBAN/SWIFT info in the handleBank() function.');
+  window.open('https://buy.stripe.com/8x228lg2n2k1c007rLdIA00','_blank','noopener');
 }
 
 // ─── INIT ────────────────────────────────────────────────────
