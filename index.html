@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Life in Numbers</title>
+<title>Memento</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -40,9 +40,11 @@ h1 em{font-style:italic;color:var(--lived)}
 .donate-btn-outline:hover{background:var(--lived);color:var(--bg)}
 
 /* DONATE MODAL OVERLAY */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:24px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .25s ease}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;padding:36px 32px;position:relative}
+.modal-overlay.open.visible{opacity:1}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;padding:36px 32px;position:relative;transform:translateY(12px);transition:transform .25s ease}
+.modal-overlay.open.visible .modal{transform:translateY(0)}
 .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:4px 8px;border-radius:4px;transition:color .15s}
 .modal-close:hover{color:var(--text)}
 .modal-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
@@ -74,7 +76,78 @@ h1 em{font-style:italic;color:var(--lived)}
 .qr-wrap{width:96px;height:96px;background:#fff;border-radius:6px;padding:4px;display:flex;align-items:center;justify-content:center}
 .qr-wrap canvas,.qr-wrap img{display:block}
 
-/* INPUTS */
+/* WELCOME SCREEN */
+#welcome-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;overflow:hidden}
+#welcome-screen .app-shell{max-width:960px;margin:0 auto;padding:0 24px;width:100%}
+.welcome-body{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.welcome-content{max-width:520px;width:100%;animation:wFadeIn .6s ease both}
+@keyframes wFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.welcome-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:20px}
+.welcome-heading{font-family:var(--serif);font-size:clamp(32px,5vw,54px);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:var(--text);margin-bottom:16px}
+.welcome-heading em{font-style:italic;color:var(--lived)}
+.welcome-sub{font-size:15px;color:var(--muted);font-weight:300;margin-bottom:36px;line-height:1.5}
+.welcome-input-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.welcome-input-row input[type="date"]{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:15px;padding:13px 16px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;min-width:0}
+.welcome-input-row input[type="date"]:focus{border-color:var(--lived)}
+.welcome-input-row input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+.welcome-go-btn{background:var(--lived);border:none;border-radius:8px;color:var(--bg);font-size:20px;width:50px;height:50px;cursor:pointer;flex-shrink:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
+.welcome-go-btn:hover{opacity:.85}
+.welcome-privacy{font-size:11px;color:var(--muted2);font-family:var(--mono);letter-spacing:.04em}
+#welcome-screen header{border-bottom:1px solid var(--border);padding:20px 0}
+#welcome-screen .header-top{margin-bottom:0}
+#welcome-screen h1,#welcome-screen .header-sub{display:none}
+
+/* MAIN CONTENT hidden initially */
+#main-content{display:none}
+#main-content.visible{display:block;animation:mFadeIn .5s ease both}
+@keyframes mFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* JAR + DECADES combined layout */
+.jar-decades-wrap{display:flex;gap:32px;padding:16px 0;align-items:flex-start}
+.jar-decades-right{flex:1;min-width:0;display:flex;gap:32px;align-items:flex-start}
+.jar-info-block{flex-shrink:0;min-width:160px}
+.jar-pct{font-family:var(--mono);font-size:52px;font-weight:300;color:var(--lived);line-height:1;margin-bottom:4px}
+.jar-pct-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.jar-items{display:flex;flex-direction:column;gap:9px}
+.jar-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.jar-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.decades-inline{flex:1;min-width:0}
+.decades-inline-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+/* Compact decade bars */
+.decade-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.decade-label{font-family:var(--mono);font-size:10px;color:var(--muted);width:36px;text-align:right;flex-shrink:0}
+.decade-bar-wrap{flex:1;height:14px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.decade-bar{height:100%;border-radius:2px}
+.decade-bar.lived{background:var(--lived)}
+.decade-bar.partial{background:linear-gradient(90deg,var(--lived) var(--fp),var(--surface2) var(--fp));width:100%}
+.decade-bar.future{background:var(--surface2);width:100%}
+.decade-pct{font-family:var(--mono);font-size:9px;color:var(--muted);width:24px;flex-shrink:0;text-align:right}
+
+@media(max-width:700px){
+  .jar-decades-wrap{flex-direction:column;align-items:center}
+  .jar-decades-right{flex-direction:column;width:100%}
+  .jar-info-block{min-width:unset}
+  .longevity-cta{padding:28px 20px}
+  .crypto-row{grid-template-columns:1fr}
+}
+
+/* LONGEVITY CTA */
+.longevity-cta{margin-top:56px;padding:36px 40px;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-align:center;position:relative;overflow:hidden}
+.longevity-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(200,169,110,.07) 0%,transparent 70%);pointer-events:none}
+.longevity-cta-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--lived);margin-bottom:16px}
+.longevity-cta-title{font-family:var(--serif);font-size:clamp(22px,4vw,36px);font-weight:400;line-height:1.15;color:var(--text);margin-bottom:16px}
+.longevity-cta-title em{font-style:italic;color:var(--lived)}
+.longevity-cta-link{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--lived);text-decoration:none;border-bottom:1px solid var(--lived-dim);padding-bottom:2px;transition:color .15s,border-color .15s}
+.longevity-cta-link:hover{color:var(--lived-light);border-color:var(--lived-light)}
+
+/* Fix crypto row overflow */
+.crypto-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow:hidden}
+.crypto-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px;min-width:0;overflow:hidden}
+.crypto-address{font-family:var(--mono);font-size:10px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 10px;cursor:pointer;transition:border-color .15s;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;overflow:hidden;min-width:0}
+.crypto-address span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+
+/* responsive handled in jar-decades block */
+
 .inputs-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:40px}
 .field{display:flex;flex-direction:column;gap:6px}
 .field label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
@@ -97,15 +170,10 @@ h1 em{font-style:italic;color:var(--lived)}
 .viz-panel{display:none}
 .viz-panel.active{display:block}
 
-/* JAR */
+/* JAR legacy - kept for SVG */
 .jar-wrap{display:flex;align-items:flex-start;gap:48px;padding:16px 0}
 #jar-svg{flex-shrink:0}
 .jar-legend{padding-top:16px;flex:1}
-.jar-pct{font-family:var(--mono);font-size:64px;font-weight:300;color:var(--lived);line-height:1;margin-bottom:4px}
-.jar-pct-sub{font-size:12px;color:var(--muted);margin-bottom:28px}
-.jar-items{display:flex;flex-direction:column;gap:10px}
-.jar-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
-.jar-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
 /* WEEKS */
 .weeks-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px}
@@ -125,18 +193,7 @@ h1 em{font-style:italic;color:var(--lived)}
 .clock-row-lbl{font-size:12px;color:var(--muted)}
 .clock-row-val{font-family:var(--mono);font-size:13px;color:var(--text)}
 
-/* DECADES */
-.decades-header{margin-bottom:24px}
-.decades-header h3{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:4px}
-.decades-sub{font-size:12px;color:var(--muted)}
-.decade-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.decade-label{font-family:var(--mono);font-size:11px;color:var(--muted);width:40px;text-align:right;flex-shrink:0}
-.decade-bar-wrap{flex:1;height:20px;background:var(--surface2);border-radius:3px;overflow:hidden}
-.decade-bar{height:100%;border-radius:3px}
-.decade-bar.lived{background:var(--lived)}
-.decade-bar.partial{background:linear-gradient(90deg,var(--lived) var(--fp),var(--surface2) var(--fp));width:100%}
-.decade-bar.future{background:var(--surface2);width:100%}
-.decade-pct{font-family:var(--mono);font-size:10px;color:var(--muted);width:36px;flex-shrink:0}
+/* DECADES — handled in jar-decades block above */
 
 /* MILESTONES */
 .milestones-section{margin-top:56px}
@@ -159,8 +216,7 @@ h1 em{font-style:italic;color:var(--lived)}
 .milestone-mini-fill{height:100%;border-radius:2px;background:var(--lived)}
 .milestone-fact{font-size:11px;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px;font-style:italic;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .milestone-fact-text{flex:1}
-.cite-btn{font-family:var(--mono);font-size:9px;color:var(--muted);border:none;padding:0;cursor:pointer;background:none;flex-shrink:0;margin-top:2px;text-decoration:none;display:inline-block;transition:color .15s}
-.cite-btn:hover{color:var(--lived)}
+.cite-btn{font-family:var(--mono);font-size:9px;color:var(--lived-dim);border:none;padding:0;cursor:pointer;background:none;flex-shrink:0;margin-top:2px;text-decoration:none;display:inline-block;transition:color .15s,border-color .15s,background .15s}
 .milestone-past{opacity:.65}
 .milestone-past .milestone-age{color:var(--muted)}
 .milestone-past .milestone-mini-fill{background:var(--muted2)}
@@ -178,6 +234,14 @@ h1 em{font-style:italic;color:var(--lived)}
 /* FOOTER NOTE */
 .footer-note{margin-top:28px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--muted2);line-height:1.6;font-style:italic;text-align:center}
 
+/* SPECIAL BANNERS */
+.special-banner{margin-bottom:28px;padding:20px 26px;background:var(--surface);border:1px solid var(--lived-dim);border-radius:12px;line-height:1.65}
+.special-banner-invalid{border-color:var(--danger)}
+.special-banner-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--lived);margin-bottom:8px}
+.special-banner-invalid .special-banner-eyebrow{color:var(--danger)}
+.special-banner-body{font-size:13px;color:var(--text);font-weight:300}
+.special-banner-rate{font-family:var(--mono);color:var(--danger);font-size:13px}
+
 @media(max-width:600px){
   .jar-wrap,.clock-wrap{flex-direction:column;align-items:center}
   .jar-pct{font-size:48px}
@@ -189,6 +253,42 @@ h1 em{font-style:italic;color:var(--lived)}
 </style>
 </head>
 <body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen">
+  <div class="app-shell">
+    <header style="margin-bottom:0">
+      <div class="header-top">
+        <div class="header-left">
+          <div class="header-label" data-i18n="mori">memento</div>
+        </div>
+        <div class="header-right">
+          <div class="lang-switch">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('ua')">UA</button>
+            <button class="lang-btn" onclick="setLang('ru')">RU</button>
+          </div>
+          <button class="donate-btn" onclick="openDonate()" data-i18n="donateBtnLabel">Donate</button>
+        </div>
+      </div>
+    </header>
+  </div>
+  <div class="welcome-body">
+    <div class="welcome-content">
+      <div class="welcome-eyebrow" data-i18n="welcomeEyebrow">memento mori</div>
+      <h2 class="welcome-heading" data-i18n="welcomeHeading"></h2>
+      <p class="welcome-sub" data-i18n="welcomeSub"></p>
+      <div class="welcome-input-row">
+        <input type="date" id="welcome-date" onkeydown="if(event.key==='Enter')goToMain()">
+        <button class="welcome-go-btn" onclick="goToMain()" title="Continue">→</button>
+      </div>
+      <p class="welcome-privacy" data-i18n="welcomePrivacy"></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-content">
 <div class="app">
 
 <!-- HEADER -->
@@ -248,7 +348,14 @@ h1 em{font-style:italic;color:var(--lived)}
   </div>
 </div>
 
+<!-- SPECIAL BANNER (over-LE / invalid age) -->
+<div id="special-banner" style="display:none" class="special-banner">
+  <div id="special-banner-eyebrow" class="special-banner-eyebrow"></div>
+  <div id="special-banner-body" class="special-banner-body"></div>
+</div>
+
 <!-- SUMMARY -->
+<div id="stats-section">
 <div class="summary">
   <div class="stat"><div class="stat-val" id="s-age">—</div><div class="stat-lbl" data-i18n="sAge"></div></div>
   <div class="stat"><div class="stat-val" id="s-lived">—</div><div class="stat-lbl" data-i18n="sLived"></div></div>
@@ -256,6 +363,7 @@ h1 em{font-style:italic;color:var(--lived)}
   <div class="stat"><div class="stat-val" id="s-pct">—</div><div class="stat-lbl" data-i18n="sPct"></div></div>
   <div class="stat"><div class="stat-val" id="s-expectancy">—</div><div class="stat-lbl" data-i18n="sExp"></div></div>
   <div class="stat"><div class="stat-val" id="s-days">—</div><div class="stat-lbl" data-i18n="sDays"></div></div>
+  <div class="stat"><div class="stat-val" id="s-days-rem">—</div><div class="stat-lbl" data-i18n="sDaysRem"></div></div>
 </div>
 
 <!-- TABS -->
@@ -263,29 +371,34 @@ h1 em{font-style:italic;color:var(--lived)}
   <button class="tab active" data-tab="jar" data-i18n="tabJar"></button>
   <button class="tab" data-tab="weeks" data-i18n="tabWeeks"></button>
   <button class="tab" data-tab="clock" data-i18n="tabClock"></button>
-  <button class="tab" data-tab="decades" data-i18n="tabDecades"></button>
 </div>
 
-<!-- JAR -->
+<!-- JAR + DECADES -->
 <div class="viz-panel active" id="tab-jar">
-  <div class="jar-wrap">
-    <svg id="jar-svg" width="180" height="300" viewBox="0 0 180 300"></svg>
-    <div class="jar-legend">
-      <div class="jar-pct" id="jar-pct-num">0%</div>
-      <div class="jar-pct-sub" data-i18n="jarSub"></div>
-      <div class="jar-items">
-        <div class="jar-item">
-          <div class="jar-dot" style="background:var(--lived)"></div>
-          <span id="jar-lived-years"></span>
+  <div class="jar-decades-wrap">
+    <svg id="jar-svg" width="160" height="280" viewBox="0 0 180 300" style="flex-shrink:0"></svg>
+    <div class="jar-decades-right">
+      <div class="jar-info-block">
+        <div class="jar-pct" id="jar-pct-num">0%</div>
+        <div class="jar-pct-sub" data-i18n="jarSub"></div>
+        <div class="jar-items">
+          <div class="jar-item">
+            <div class="jar-dot" style="background:var(--lived)"></div>
+            <span id="jar-lived-years"></span>
+          </div>
+          <div class="jar-item">
+            <div class="jar-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>
+            <span id="jar-remaining-years"></span>
+          </div>
+          <div class="jar-item" style="margin-top:4px">
+            <div class="jar-dot" style="background:transparent"></div>
+            <span id="jar-today-note" style="font-size:11px;font-style:italic"></span>
+          </div>
         </div>
-        <div class="jar-item">
-          <div class="jar-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>
-          <span id="jar-remaining-years"></span>
-        </div>
-        <div class="jar-item" style="margin-top:6px">
-          <div class="jar-dot" style="background:transparent"></div>
-          <span id="jar-today-note" style="font-size:11px;font-style:italic"></span>
-        </div>
+      </div>
+      <div class="decades-inline">
+        <div class="decades-inline-title" data-i18n="decadesTitle"></div>
+        <div id="decades-container"></div>
       </div>
     </div>
   </div>
@@ -300,7 +413,7 @@ h1 em{font-style:italic;color:var(--lived)}
   <div id="weeks-grid"></div>
   <div class="legend-row">
     <div class="legend-item"><div class="legend-dot" style="background:var(--lived);border-radius:1px"></div><span data-i18n="weeksLived"></span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border);border-radius:1px"></div><span data-i18n="weeksFuture"></span></div>
+    <div class="legend-item" id="weeks-legend-ahead"><div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border);border-radius:1px"></div><span data-i18n="weeksFuture"></span></div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--danger);border-radius:1px"></div><span data-i18n="weeksCurrent"></span></div>
   </div>
 </div>
@@ -323,20 +436,19 @@ h1 em{font-style:italic;color:var(--lived)}
   </div>
 </div>
 
-<!-- DECADES -->
-<div class="viz-panel" id="tab-decades">
-  <div class="decades-header">
-    <h3 data-i18n="decadesTitle"></h3>
-    <div class="decades-sub" data-i18n="decadesSub"></div>
-  </div>
-  <div id="decades-container"></div>
-</div>
-
 <!-- MILESTONES -->
 <div class="milestones-section">
   <div class="section-title" data-i18n="msTitle"></div>
   <div class="section-sub" data-i18n="msSub"></div>
   <div class="milestones-grid" id="milestones-grid"></div>
+</div>
+</div><!-- /stats-section -->
+
+<!-- LONGEVITY CTA -->
+<div class="longevity-cta">
+  <div class="longevity-cta-eyebrow" data-i18n="ctaEyebrow"></div>
+  <div class="longevity-cta-title" data-i18n="ctaTitle"></div>
+  <a class="longevity-cta-link" href="https://en.wikipedia.org/wiki/Life_extension" target="_blank" rel="noopener" data-i18n="ctaLink"></a>
 </div>
 
 <!-- FOOTER DONATE -->
@@ -351,6 +463,10 @@ h1 em{font-style:italic;color:var(--lived)}
 <div class="footer-note" data-i18n="footer"></div>
 
 <!-- DONATE MODAL -->
+</div><!-- /app -->
+</div><!-- /main-content -->
+
+<!-- DONATE MODAL — outside main-content so it works from welcome screen too -->
 <div class="modal-overlay" id="donateModal" onclick="handleOverlayClick(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeDonate()">✕</button>
@@ -404,8 +520,6 @@ h1 em{font-style:italic;color:var(--lived)}
   </div>
 </div>
 
-</div><!-- /app -->
-
 <!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
@@ -451,8 +565,15 @@ const LANGS = {
     labelBirth:'Date of birth', labelGender:'Sex', labelCountry:'Country',
     genderM:'Male', genderF:'Female',
     sAge:'age', sLived:'years lived', sRemaining:'years left',
-    sPct:'elapsed', sExp:'life expectancy', sDays:'days behind',
-    tabJar:'Vessel', tabWeeks:'Weeks', tabClock:'Life Clock', tabDecades:'Decades',
+    sPct:'elapsed', sExp:'life expectancy', sDays:'days behind', sDaysRem:'days remaining',
+    tabJar:'Vessel & Decades', tabWeeks:'Weeks', tabClock:'Life Clock', tabDecades:'Decades',
+    welcomeEyebrow:'memento mori',
+    welcomeHeading:'How much of your life have you <em>already lived?</em>',
+    welcomeSub:'Enter your date of birth to find out. Your data is never stored or shared.',
+    welcomePrivacy:'data never stored',
+    ctaEyebrow:'the bigger picture',
+    ctaTitle:'Ageing can be <em>defeated.</em><br>Start fighting today.',
+    ctaLink:'Learn more about life extension →',
     jarSub:'of expected life elapsed',
     jarLivedYears:y=>`${y} years lived`,
     jarRemYears:y=>`${y} years remaining`,
@@ -485,6 +606,12 @@ const LANGS = {
     donateCryptoLabel:'Crypto',
     cryptoTap:'tap to copy',
     copiedMsg:'Copied!',
+    overLETitle:'You have outlived your region\'s life expectancy',
+    overLEMsg:rate=>`You have lived longer than the expected life expectancy in your region. You carry good genes, favourable environmental factors, and likely a healthy lifestyle. However, your probability of death is rising steeply with each passing year: +${rate}% per year.`,
+    invalidAgeTitle:'Age entered is invalid',
+    invalidAgeMsg:'No lifespan exceeding 122 years has ever been recorded. Let\'s change that — with longevity science.',
+    clockOverLE:'Your clock runs differently',
+    clockOverLESub:'Remaining: ???',
   },
   ua: {
     mori:'memento',
@@ -493,8 +620,15 @@ const LANGS = {
     labelBirth:'Дата народження', labelGender:'Стать', labelCountry:'Країна',
     genderM:'Чоловіча', genderF:'Жіноча',
     sAge:'вік', sLived:'прожито років', sRemaining:'залишилось років',
-    sPct:'використано', sExp:'очікуваний вік', sDays:'днів позаду',
-    tabJar:'Посудина', tabWeeks:'Тижні', tabClock:'Годинник', tabDecades:'Декади',
+    sPct:'використано', sExp:'очікуваний вік', sDays:'днів позаду', sDaysRem:'днів залишилось',
+    tabJar:'Посудина & Декади', tabWeeks:'Тижні', tabClock:'Годинник', tabDecades:'Декади',
+    welcomeEyebrow:'memento mori',
+    welcomeHeading:'Скільки свого життя ви вже <em>прожили?</em>',
+    welcomeSub:'Введіть дату народження, щоб дізнатися. Ваші дані ніколи не зберігаються.',
+    welcomePrivacy:'дані не зберігаються',
+    ctaEyebrow:'більша картина',
+    ctaTitle:'Старіння можна <em>перемогти.</em><br>Починайте боротьбу вже сьогодні.',
+    ctaLink:'Дізнайтеся більше про продовження життя →',
     jarSub:'очікуваного життя прожито',
     jarLivedYears:y=>`${y} років прожито`,
     jarRemYears:y=>`${y} років залишилось`,
@@ -527,6 +661,12 @@ const LANGS = {
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'натисніть щоб скопіювати',
     copiedMsg:'Скопійовано!',
+    overLETitle:'Ви прожили довше, ніж очікувана тривалість життя у вашому регіоні',
+    overLEMsg:rate=>`Ви прожили довше, ніж очікувана тривалість життя у вашому регіоні. Ви маєте гарні гени, сприятливі фактори середовища і, можливо, здоровий спосіб життя. Однак ваша ймовірність смерті стрімко зростає з кожним роком: +${rate}% на рік.`,
+    invalidAgeTitle:'Введений вік некоректний',
+    invalidAgeMsg:'Ще не було зареєстровано тривалості життя понад 122 роки. Давайте змінимо це — разом з наукою про довголіття.',
+    clockOverLE:'Ваш годинник йде по-іншому',
+    clockOverLESub:'Залишилось: ???',
   },
   ru: {
     mori:'memento',
@@ -535,8 +675,15 @@ const LANGS = {
     labelBirth:'Дата рождения', labelGender:'Пол', labelCountry:'Страна',
     genderM:'Мужской', genderF:'Женский',
     sAge:'возраст', sLived:'прожито лет', sRemaining:'осталось лет',
-    sPct:'использовано', sExp:'ожидаемый возраст', sDays:'дней позади',
-    tabJar:'Сосуд', tabWeeks:'Недели', tabClock:'Часы жизни', tabDecades:'Декады',
+    sPct:'использовано', sExp:'ожидаемый возраст', sDays:'дней позади', sDaysRem:'дней осталось',
+    tabJar:'Сосуд & Декады', tabWeeks:'Недели', tabClock:'Часы жизни', tabDecades:'Декады',
+    welcomeEyebrow:'memento mori',
+    welcomeHeading:'Сколько жизни вы уже <em>прожили?</em>',
+    welcomeSub:'Введите дату рождения, чтобы узнать. Ваши данные никогда не сохраняются.',
+    welcomePrivacy:'данные не сохраняются',
+    ctaEyebrow:'общая картина',
+    ctaTitle:'Старение можно <em>победить.</em><br>Начинайте борьбу прямо сейчас.',
+    ctaLink:'Узнайте больше о продлении жизни →',
     jarSub:'ожидаемой жизни прожито',
     jarLivedYears:y=>`${y} лет прожито`,
     jarRemYears:y=>`${y} лет осталось`,
@@ -569,6 +716,12 @@ const LANGS = {
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'нажмите чтобы скопировать',
     copiedMsg:'Скопировано!',
+    overLETitle:'Вы прожили дольше, чем ожидаемая продолжительность жизни в вашем регионе',
+    overLEMsg:rate=>`Вы прожили дольше, чем ожидаемая продолжительность жизни в вашем регионе. Вы обладатель хороших генов, средовых факторов и возможно правильного образа жизни. Однако в любом случае ваша вероятность смерти стремительно растёт с каждым годом: +${rate}% в год.`,
+    invalidAgeTitle:'Введённый возраст некорректен',
+    invalidAgeMsg:'Ещё не было зарегистрировано продолжительности жизни выше 122 лет. Давайте изменим это с наукой о продлении жизни.',
+    clockOverLE:'Ваши часы идут иначе',
+    clockOverLESub:'Осталось: ???',
   }
 };
 
@@ -606,13 +759,17 @@ function T(key,...args) {
   return typeof v==='function'?v(...args):(v??'');
 }
 
+const HTML_I18N_KEYS = new Set(['title','footer','welcomeHeading','ctaTitle']);
+
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key=el.dataset.i18n;
     const v=LANGS[lang][key];
     if(v===undefined)return;
-    if(key==='title'){el.innerHTML=v;return;}
-    if(key==='footer'){el.innerHTML=v.replace('\n','<br>');return;}
+    if(HTML_I18N_KEYS.has(key)){
+      el.innerHTML = typeof v==='string' ? v.replace(/\n/g,'<br>') : v;
+      return;
+    }
     if(typeof v==='string')el.textContent=v;
   });
 }
@@ -621,7 +778,7 @@ function setLang(l) {
   lang=l;
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
   applyI18n();
-  compute();
+  if(document.getElementById('main-content').classList.contains('visible')) compute();
 }
 
 // ─── LE DATA ──────────────────────────────────────────────────
@@ -648,6 +805,41 @@ function svgEl(tag){return document.createElementNS('http://www.w3.org/2000/svg'
 function setA(el,attrs){for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v);}
 function mk(tag,cls,text){const el=document.createElement(tag);el.className=cls;if(text!==undefined)el.textContent=text;return el;}
 
+// Gompertz-Makeham law: μ(x) = A + B·e^(cx)
+// Parameters fitted to general population data (HMD averages)
+function gompertzAnnualMortality(age) {
+  const A=0.0028, B=0.00004, c=0.096;
+  const mu = A + B * Math.exp(c * age);
+  const q = (1 - Math.exp(-mu)) * 100;
+  return Math.round(q * 10) / 10;
+}
+
+// ─── SPECIAL BANNER ──────────────────────────────────────────
+function showSpecialBanner(type, age) {
+  const el = document.getElementById('special-banner');
+  const eyebrow = document.getElementById('special-banner-eyebrow');
+  const body = document.getElementById('special-banner-body');
+  el.style.display = '';
+  el.className = 'special-banner' + (type==='invalid' ? ' special-banner-invalid' : '');
+  if (type === 'invalid') {
+    eyebrow.textContent = T('invalidAgeTitle');
+    body.textContent = T('invalidAgeMsg');
+  } else {
+    const rate = gompertzAnnualMortality(Math.floor(age));
+    eyebrow.textContent = T('overLETitle');
+    // Get plain text, then highlight the rate number
+    const msgText = T('overLEMsg', rate);
+    body.innerHTML = msgText.replace(
+      `+${rate}%`,
+      `<span class="special-banner-rate">+${rate}%</span>`
+    );
+  }
+}
+
+function hideSpecialBanner() {
+  document.getElementById('special-banner').style.display = 'none';
+}
+
 // ─── COMPUTE ─────────────────────────────────────────────────
 function compute() {
   const bdStr=document.getElementById('birthdate').value;
@@ -655,6 +847,13 @@ function compute() {
   const country=document.getElementById('country').value;
   if(!bdStr)return;
   const bd=new Date(bdStr),now=new Date();
+
+  // Clamp: before 1900 or future date → silent block (inputs have min/max, this is a safety net)
+  if(bd.getFullYear()<1900||bd>now){
+    document.getElementById('stats-section').style.display='none';
+    hideSpecialBanner();
+    return;
+  }
   const exp=LE[country][gender];
   const livedMs=now-bd;
   const livedY=livedMs/(365.25*24*3600*1000);
@@ -667,28 +866,48 @@ function compute() {
   const remDays=Math.max(0,Math.round(remY*365.25));
   const remSat=Math.round(remDays/7);
 
-  updateSummary(livedY,remY,pct,exp,livedDays);
-  drawJar(pct,livedY,remY);
-  drawWeeks(livedWeeks,totalWeeks);
-  drawClock(pct,livedY,exp,livedHours,livedDays,livedWeeks,remDays,remSat);
+  // Age > 122: invalid
+  if (livedY > 122) {
+    showSpecialBanner('invalid', livedY);
+    document.getElementById('stats-section').style.display = 'none';
+    return;
+  }
+
+  // Restore stats section if it was hidden
+  document.getElementById('stats-section').style.display = '';
+
+  // Age > life expectancy (but ≤ 122): over-LE mode
+  const overLE = livedY > exp;
+  if (overLE) {
+    showSpecialBanner('overLE', livedY);
+  } else {
+    hideSpecialBanner();
+  }
+
+  updateSummary(livedY,remY,pct,exp,livedDays,overLE);
+  drawJar(pct,livedY,remY,overLE);
+  drawWeeks(livedWeeks,totalWeeks,overLE);
+  drawClock(pct,livedY,exp,livedHours,livedDays,livedWeeks,remDays,remSat,overLE);
   drawDecades(livedY,exp);
   drawMilestones(bd,now,exp,gender);
 }
 
-function updateSummary(livedY,remY,pct,exp,days) {
+function updateSummary(livedY,remY,pct,exp,days,overLE) {
   const ageY=Math.floor(livedY),ageM=Math.floor((livedY-ageY)*12);
   const sep=lang==='en'?['y ','m']:[' л ',' м'];
   if(lang==='ua')sep[0]=' р ';
   document.getElementById('s-age').textContent=ageY+sep[0]+ageM+sep[1];
   document.getElementById('s-lived').textContent=livedY.toFixed(1);
-  document.getElementById('s-remaining').textContent=remY.toFixed(1);
+  document.getElementById('s-remaining').textContent=overLE?'???':remY.toFixed(1);
   document.getElementById('s-pct').textContent=(pct*100).toFixed(1)+'%';
   document.getElementById('s-expectancy').textContent=exp;
   document.getElementById('s-days').textContent=fmtBig(days);
+  const remDaysVal=Math.max(0,Math.round(remY*365.25));
+  document.getElementById('s-days-rem').textContent=overLE?'???':fmtBig(remDaysVal);
 }
 
 // ─── JAR ─────────────────────────────────────────────────────
-function drawJar(pct,livedY,remY) {
+function drawJar(pct,livedY,remY,overLE) {
   const svg=document.getElementById('jar-svg');
   svg.innerHTML='';
   const W=180,H=300,neck=32,body=86,topY=30,botY=270,jarH=botY-topY;
@@ -736,17 +955,24 @@ function drawJar(pct,livedY,remY) {
 
   document.getElementById('jar-pct-num').textContent=(pct*100).toFixed(1)+'%';
   document.getElementById('jar-lived-years').textContent=T('jarLivedYears',livedY.toFixed(1));
-  document.getElementById('jar-remaining-years').textContent=T('jarRemYears',remY.toFixed(1));
+  document.getElementById('jar-remaining-years').textContent=overLE?'???':T('jarRemYears',remY.toFixed(1));
   const locale=lang==='ua'?'uk-UA':lang==='ru'?'ru-RU':'en-GB';
   document.getElementById('jar-today-note').textContent=T('jarToday',new Date().toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'}));
 }
 
 // ─── WEEKS ────────────────────────────────────────────────────
-function drawWeeks(livedW,totalW) {
+function drawWeeks(livedW,totalW,overLE) {
   const grid=document.getElementById('weeks-grid');
   grid.innerHTML='';
-  document.getElementById('weeks-meta').textContent=T('weeksMeta',fmtBig(livedW),fmtBig(totalW));
-  const dt=Math.min(totalW,5200),dl=Math.min(livedW,dt);
+
+  // Meta line: total is ??? when overLE
+  const totalDisplay = overLE ? '???' : fmtBig(totalW);
+  document.getElementById('weeks-meta').textContent=T('weeksMeta',fmtBig(livedW),totalDisplay);
+
+  // How many dots to render
+  const dt = overLE ? Math.min(livedW+1, 5200) : Math.min(totalW, 5200);
+  const dl = Math.min(livedW, dt);
+
   for(let i=0;i<dt;i++){
     const d=document.createElement('div');d.className='week-dot';
     if(i<dl-1){d.style.background='var(--lived)';d.style.opacity='.7';}
@@ -757,7 +983,7 @@ function drawWeeks(livedW,totalW) {
 }
 
 // ─── CLOCK ───────────────────────────────────────────────────
-function drawClock(pct,livedY,exp,hours,days,weeks,remDays,remSat) {
+function drawClock(pct,livedY,exp,hours,days,weeks,remDays,remSat,overLE) {
   const svg=document.getElementById('clock-svg');
   svg.innerHTML='';
   const cx=140,cy=140,R=110,sw=10;
@@ -765,14 +991,18 @@ function drawClock(pct,livedY,exp,hours,days,weeks,remDays,remSat) {
   const px=(a,r)=>cx+r*Math.cos(toRad(a));
   const py=(a,r)=>cy+r*Math.sin(toRad(a));
 
-  const lifeH=12+pct*12;
-  const hh=Math.floor(lifeH)%24;
-  const mm=Math.floor((lifeH%1)*60);
-  const timeStr=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
-  const remHTot=(1-pct)*12;
-  const remH=Math.floor(remHTot);
-  const remM=Math.floor((remHTot%1)*60);
-  const handAng=-90+pct*360;
+  // When overLE, pct > 1: the hand wraps past midnight and keeps going
+  // lifeH: noon=12, midnight=24, after midnight continues e.g. 25=01:00
+  const lifeH = 12 + pct * 12;
+  const hh = Math.floor(lifeH) % 24;
+  const mm = Math.floor((lifeH % 1) * 60);
+  const timeStr = String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0');
+  // Visual angle: wrap the hand position mod 360 so it keeps spinning
+  const handAng = -90 + ((pct % 1) * 360);
+  // For normal mode only:
+  const remHTot = (1 - pct) * 12;
+  const remH = Math.floor(Math.max(0, remHTot));
+  const remM = Math.floor((Math.max(0, remHTot) % 1) * 60);
 
   // Face
   const face=svgEl('circle');
@@ -851,27 +1081,36 @@ function drawClock(pct,livedY,exp,hours,days,weeks,remDays,remSat) {
   midAnnot.textContent=T('clockMidnight');
   svg.appendChild(midAnnot);
 
-  // Clock hand
+  // Clock hand — red when past expected lifespan
+  const handColor = overLE ? '#b85c5c' : '#e8c98e';
+  const tailColor = overLE ? '#7a2e2e' : '#7a5f32';
+  const dotColor  = overLE ? '#b85c5c' : '#c8a96e';
   const handR=R-sw/2-10;
   const hand=svgEl('line');
   setA(hand,{x1:cx,y1:cy,x2:px(handAng,handR),y2:py(handAng,handR),
-    stroke:'#e8c98e','stroke-width':2.5,'stroke-linecap':'round'});
+    stroke:handColor,'stroke-width':2.5,'stroke-linecap':'round'});
   svg.appendChild(hand);
   const tail=svgEl('line');
   setA(tail,{x1:cx,y1:cy,x2:px(handAng+180,16),y2:py(handAng+180,16),
-    stroke:'#7a5f32','stroke-width':1.5,'stroke-linecap':'round'});
+    stroke:tailColor,'stroke-width':1.5,'stroke-linecap':'round'});
   svg.appendChild(tail);
-  const c1=svgEl('circle');setA(c1,{cx,cy,r:5,fill:'#c8a96e'});svg.appendChild(c1);
+  const c1=svgEl('circle');setA(c1,{cx,cy,r:5,fill:dotColor});svg.appendChild(c1);
   const c2=svgEl('circle');setA(c2,{cx,cy,r:2.5,fill:'#0d0d0d'});svg.appendChild(c2);
 
   document.getElementById('clock-time-display').textContent=timeStr;
-  document.getElementById('clock-sublabel').innerHTML=
-    T('clockLine1',timeStr)+'<br>'+T('clockLine2',remH,remM);
+  if(overLE){
+    document.getElementById('clock-sublabel').innerHTML=
+      T('clockOverLE')+'<br><span style="color:var(--danger);font-family:var(--mono)">'
+      +T('clockOverLESub')+'</span>';
+  } else {
+    document.getElementById('clock-sublabel').innerHTML=
+      T('clockLine1',timeStr)+'<br>'+T('clockLine2',remH,remM);
+  }
   document.getElementById('arc-hours').textContent=fmtBig(hours);
   document.getElementById('arc-days-num').textContent=fmtBig(days);
   document.getElementById('arc-weeks-num').textContent=fmtBig(weeks);
-  document.getElementById('arc-rem-days').textContent=fmtBig(remDays);
-  document.getElementById('arc-saturdays').textContent=fmtBig(remSat);
+  document.getElementById('arc-rem-days').textContent=overLE?'???':fmtBig(remDays);
+  document.getElementById('arc-saturdays').textContent=overLE?'???':fmtBig(remSat);
 }
 
 // ─── DECADES ─────────────────────────────────────────────────
@@ -901,6 +1140,7 @@ function drawDecades(livedY,exp) {
 function drawMilestones(bd,now,exp,gender) {
   const grid=document.getElementById('milestones-grid');
   grid.innerHTML='';
+  let citeNum=0; // citation counter
   // Always show 30–80; no cutoff based on life expectancy
   for(const age of [30,40,50,60,70,80]){
     const targetDate=new Date(bd);
@@ -940,9 +1180,10 @@ function drawMilestones(bd,now,exp,gender) {
 
     const src=SOURCES[age]?.[gender];
     if(src){
+      citeNum++;
       const citeA=document.createElement('a');
       citeA.className='cite-btn';
-      citeA.textContent='[*]';
+      citeA.textContent='['+citeNum+']';
       citeA.href=src;
       citeA.target='_blank';
       citeA.rel='noopener';
@@ -971,8 +1212,11 @@ document.querySelectorAll('.tab').forEach(tab=>{
 let qrGenerated=false;
 
 function openDonate() {
-  document.getElementById('donateModal').classList.add('open');
+  const m = document.getElementById('donateModal');
+  m.style.display='flex';
   document.body.style.overflow='hidden';
+  // force reflow then add visible class for transition
+  requestAnimationFrame(()=>requestAnimationFrame(()=>m.classList.add('open','visible')));
   if(!qrGenerated) {
     generateQRs();
     qrGenerated=true;
@@ -980,8 +1224,13 @@ function openDonate() {
 }
 
 function closeDonate() {
-  document.getElementById('donateModal').classList.remove('open');
-  document.body.style.overflow='';
+  const m = document.getElementById('donateModal');
+  m.classList.remove('visible');
+  setTimeout(()=>{
+    m.classList.remove('open');
+    m.style.display='';
+    document.body.style.overflow='';
+  }, 260);
 }
 
 function handleOverlayClick(e) {
@@ -1037,12 +1286,53 @@ function handleBank() {
   window.open('https://buy.stripe.com/8x228lg2n2k1c007rLdIA00','_blank','noopener');
 }
 
+// ─── WELCOME → MAIN TRANSITION ───────────────────────────────
+function goToMain() {
+  const wd = document.getElementById('welcome-date').value;
+  if (!wd) {
+    document.getElementById('welcome-date').focus();
+    document.getElementById('welcome-date').style.borderColor='var(--danger)';
+    setTimeout(()=>document.getElementById('welcome-date').style.borderColor='',1200);
+    return;
+  }
+  // Block out-of-range dates
+  const chosen = new Date(wd);
+  const now = new Date();
+  if(chosen.getFullYear() < 1900 || chosen > now) {
+    document.getElementById('welcome-date').style.borderColor='var(--danger)';
+    setTimeout(()=>document.getElementById('welcome-date').style.borderColor='',1400);
+    return;
+  }
+  // copy date to main input
+  document.getElementById('birthdate').value = wd;
+
+  const ws = document.getElementById('welcome-screen');
+  ws.style.transition = 'opacity .4s ease';
+  ws.style.opacity = '0';
+  setTimeout(()=>{
+    ws.style.display = 'none';
+    const mc = document.getElementById('main-content');
+    mc.classList.add('visible');
+    compute();
+  }, 400);
+}
+
 // ─── INIT ────────────────────────────────────────────────────
+// Set date limits dynamically: min=1900, max=today
+const todayStr = new Date().toISOString().slice(0,10);
+const minDate = '1900-01-01';
+['welcome-date','birthdate'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.setAttribute('min', minDate);
+  el.setAttribute('max', todayStr);
+});
+
+// Set a sensible default on the welcome date picker
 const defDate=new Date();
 defDate.setFullYear(defDate.getFullYear()-30);
+document.getElementById('welcome-date').value=defDate.toISOString().slice(0,10);
 document.getElementById('birthdate').value=defDate.toISOString().slice(0,10);
 applyI18n();
-compute();
 </script>
 </body>
 </html>
