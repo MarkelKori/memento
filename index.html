@@ -416,27 +416,27 @@ h1 em{font-style:italic;color:var(--lived)}
 // Example: SOURCES[30].m = "https://pubmed.ncbi.nlm.nih.gov/12345"
 const SOURCES = {
   30: {
-    m: "#",  // Source: testosterone decline ~1%/yr after 30
-    f: "#",  // Source: female fertility decline after 30
+    m: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11562514/",  // Source: testosterone decline ~1%/yr after 30
+    f: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7829786/",  // Source: female fertility decline after 30
   },
   40: {
-    m: "#",  // Source: male androgenetic alopecia prevalence ~50% by 40
-    f: "#",  // Source: perimenopause onset / bone density decline
+    m: "https://pubmed.ncbi.nlm.nih.gov/9865198/", // Source: male androgenetic alopecia prevalence ~50% by 40
+    f: "https://pubmed.ncbi.nlm.nih.gov/24559617/",  // Source: perimenopause onset / bone density decline
   },
   50: {
-    m: "#",  // Source: erectile dysfunction prevalence ~52% at 50
-    f: "#",  // Source: average menopause age 51 / CVD risk
+    m: "https://www.hopkinsmedicine.org/health/conditions-and-diseases/erectile-dysfunction",  // Source: erectile dysfunction prevalence ~52% at 50
+    f: "https://academic.oup.com/ejendo/article/193/4/G49/8281862",  // Source: average menopause age 51 / CVD risk
   },
   60: {
-    m: "#",  // Source: benign prostatic hyperplasia ~70% at 60 / hearing loss
-    f: "#",  // Source: osteoporosis risk 1 in 3 women
+    m: "https://www.auanet.org/guidelines-and-quality/guidelines/benign-prostatic-hyperplasia-%28bph%29-guideline",  // Source: benign prostatic hyperplasia ~70% at 60 / hearing loss
+    f: "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(23)02800-3/fulltext",  // Source: osteoporosis risk 1 in 3 women
   },
   70: {
-    m: "#",  // Source: chronic disease prevalence / muscle mass loss
+    m: "https://www.cdc.gov/chronic-disease/about/index.html",  // Source: chronic disease prevalence / muscle mass loss
     f: "#",  // Source: women healthier than men at 70 statistically
   },
   80: {
-    m: "#",  // Source: multimorbidity ≥2 conditions 80%
+    m: "https://www.cdc.gov/nchs/data/hestat/hestat105.pdf",  // Source: multimorbidity ≥2 conditions 80%
     f: "#",  // Source: female longevity advantage 5–7 years
   },
 };
@@ -453,7 +453,7 @@ const LANGS = {
     sAge:'age', sLived:'years lived', sRemaining:'years left',
     sPct:'elapsed', sExp:'life expectancy', sDays:'days behind',
     tabJar:'Vessel', tabWeeks:'Weeks', tabClock:'Life Clock', tabDecades:'Decades',
-    jarSub:'of life elapsed',
+    jarSub:'of expected life elapsed',
     jarLivedYears:y=>`${y} years lived`,
     jarRemYears:y=>`${y} years remaining`,
     jarToday:d=>'Today, '+d,
@@ -495,7 +495,7 @@ const LANGS = {
     sAge:'вік', sLived:'прожито років', sRemaining:'залишилось років',
     sPct:'використано', sExp:'очікуваний вік', sDays:'днів позаду',
     tabJar:'Посудина', tabWeeks:'Тижні', tabClock:'Годинник', tabDecades:'Декади',
-    jarSub:'життя прожито',
+    jarSub:'очікуваного життя прожито',
     jarLivedYears:y=>`${y} років прожито`,
     jarRemYears:y=>`${y} років залишилось`,
     jarToday:d=>'Сьогодні '+d,
@@ -537,7 +537,7 @@ const LANGS = {
     sAge:'возраст', sLived:'прожито лет', sRemaining:'осталось лет',
     sPct:'использовано', sExp:'ожидаемый возраст', sDays:'дней позади',
     tabJar:'Сосуд', tabWeeks:'Недели', tabClock:'Часы жизни', tabDecades:'Декады',
-    jarSub:'жизни прожито',
+    jarSub:'ожидаемой жизни прожито',
     jarLivedYears:y=>`${y} лет прожито`,
     jarRemYears:y=>`${y} лет осталось`,
     jarToday:d=>'Сегодня '+d,
