@@ -86,10 +86,16 @@ h1 em{font-style:italic;color:var(--lived)}
 .welcome-heading{font-family:var(--serif);font-size:clamp(32px,5vw,54px);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:var(--text);margin-bottom:16px}
 .welcome-heading em{font-style:italic;color:var(--lived)}
 .welcome-sub{font-size:15px;color:var(--muted);font-weight:300;margin-bottom:36px;line-height:1.5}
-.welcome-input-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.welcome-form{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+.welcome-input-row{display:flex;gap:8px;align-items:center}
 .welcome-input-row input[type="date"]{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:15px;padding:13px 16px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;min-width:0}
 .welcome-input-row input[type="date"]:focus{border-color:var(--lived)}
 .welcome-input-row input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+.welcome-extra-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.welcome-field{display:flex;flex-direction:column;gap:6px}
+.welcome-field label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.welcome-field select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:13px 16px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a6560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+.welcome-field select:focus{border-color:var(--lived)}
 .welcome-go-btn{background:var(--lived);border:none;border-radius:8px;color:var(--bg);font-size:20px;width:50px;height:50px;cursor:pointer;flex-shrink:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
 .welcome-go-btn:hover{opacity:.85}
 .welcome-privacy{font-size:11px;color:var(--muted2);font-family:var(--mono);letter-spacing:.04em}
@@ -157,10 +163,25 @@ h1 em{font-style:italic;color:var(--lived)}
 .field input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
 
 /* SUMMARY */
-.summary{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:24px}
+.summary{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-top:28px;margin-bottom:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:24px}
 .stat{display:flex;flex-direction:column;gap:4px}
 .stat-val{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--lived);line-height:1}
 .stat-lbl{font-size:11px;color:var(--muted);font-weight:300}
+.share-launch{display:flex;justify-content:flex-end;margin-top:-12px;margin-bottom:32px}
+.share-btn{padding-inline:18px}
+.share-modal{max-width:980px}
+.share-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.share-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.share-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.share-card-title{font-family:var(--serif);font-size:24px;line-height:1}
+.share-card-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.share-badge{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--lived);border:1px solid var(--lived-dim);border-radius:999px;padding:5px 8px;white-space:nowrap}
+.share-preview{aspect-ratio:4/5;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#0f0f0f}
+.share-preview.x{aspect-ratio:16/9}
+.share-preview img{display:block;width:100%;height:100%;object-fit:cover}
+.share-actions{display:flex;flex-wrap:wrap;gap:8px}
+.share-actions .donate-btn,.share-actions .donate-btn-outline{padding:8px 14px}
+.share-status{margin-top:14px;min-height:18px;color:var(--muted);font-size:12px}
 
 /* TABS */
 .tabs{display:flex;gap:4px;margin-bottom:32px;border-bottom:1px solid var(--border)}
@@ -246,6 +267,10 @@ h1 em{font-style:italic;color:var(--lived)}
   .jar-wrap,.clock-wrap{flex-direction:column;align-items:center}
   .jar-pct{font-size:48px}
   .clock-time{font-size:40px}
+  .welcome-extra-row{grid-template-columns:1fr}
+  .share-grid{grid-template-columns:1fr}
+  .share-launch{justify-content:stretch}
+  .share-btn{width:100%}
   .amount-row{grid-template-columns:repeat(2,1fr)}
   .payment-row,.crypto-row{grid-template-columns:1fr}
   .modal{padding:24px 18px}
@@ -275,12 +300,46 @@ h1 em{font-style:italic;color:var(--lived)}
   </div>
   <div class="welcome-body">
     <div class="welcome-content">
-      <div class="welcome-eyebrow" data-i18n="welcomeEyebrow">memento mori</div>
+      <div class="welcome-eyebrow" data-i18n="welcomeEyebrow">memento</div>
       <h2 class="welcome-heading" data-i18n="welcomeHeading"></h2>
       <p class="welcome-sub" data-i18n="welcomeSub"></p>
-      <div class="welcome-input-row">
-        <input type="date" id="welcome-date" onkeydown="if(event.key==='Enter')goToMain()">
-        <button class="welcome-go-btn" onclick="goToMain()" title="Continue">→</button>
+      <div class="welcome-form">
+        <div class="welcome-input-row">
+          <input type="date" id="welcome-date" onkeydown="if(event.key==='Enter')goToMain()">
+          <button class="welcome-go-btn" onclick="goToMain()" title="Continue">→</button>
+        </div>
+        <div class="welcome-extra-row">
+          <div class="welcome-field">
+            <label data-i18n="labelGender"></label>
+            <select id="welcome-gender">
+              <option value="m" data-i18n="genderM"></option>
+              <option value="f" data-i18n="genderF"></option>
+            </select>
+          </div>
+          <div class="welcome-field">
+            <label data-i18n="labelCountry"></label>
+            <select id="welcome-country">
+              <option value="world">🌍 World (avg)</option>
+              <option value="jp">🇯🇵 Japan</option>
+              <option value="au">🇦🇺 Australia</option>
+              <option value="se">🇸🇪 Sweden</option>
+              <option value="es">🇪🇸 Spain</option>
+              <option value="it">🇮🇹 Italy</option>
+              <option value="fr">🇫🇷 France</option>
+              <option value="ca">🇨🇦 Canada</option>
+              <option value="no">🇳🇴 Norway</option>
+              <option value="kr">🇰🇷 S. Korea</option>
+              <option value="de">🇩🇪 Germany</option>
+              <option value="uk">🇬🇧 UK</option>
+              <option value="us">🇺🇸 USA</option>
+              <option value="cn">🇨🇳 China</option>
+              <option value="br">🇧🇷 Brazil</option>
+              <option value="ua">🇺🇦 Ukraine</option>
+              <option value="ru">🇷🇺 Russia</option>
+              <option value="in">🇮🇳 India</option>
+            </select>
+          </div>
+        </div>
       </div>
       <p class="welcome-privacy" data-i18n="welcomePrivacy"></p>
     </div>
@@ -354,27 +413,16 @@ h1 em{font-style:italic;color:var(--lived)}
   <div id="special-banner-body" class="special-banner-body"></div>
 </div>
 
-<!-- SUMMARY -->
 <div id="stats-section">
-<div class="summary">
-  <div class="stat"><div class="stat-val" id="s-age">—</div><div class="stat-lbl" data-i18n="sAge"></div></div>
-  <div class="stat"><div class="stat-val" id="s-lived">—</div><div class="stat-lbl" data-i18n="sLived"></div></div>
-  <div class="stat"><div class="stat-val" id="s-remaining">—</div><div class="stat-lbl" data-i18n="sRemaining"></div></div>
-  <div class="stat"><div class="stat-val" id="s-pct">—</div><div class="stat-lbl" data-i18n="sPct"></div></div>
-  <div class="stat"><div class="stat-val" id="s-expectancy">—</div><div class="stat-lbl" data-i18n="sExp"></div></div>
-  <div class="stat"><div class="stat-val" id="s-days">—</div><div class="stat-lbl" data-i18n="sDays"></div></div>
-  <div class="stat"><div class="stat-val" id="s-days-rem">—</div><div class="stat-lbl" data-i18n="sDaysRem"></div></div>
-</div>
-
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab active" data-tab="jar" data-i18n="tabJar"></button>
+  <button class="tab active" data-tab="clock" data-i18n="tabClock"></button>
+  <button class="tab" data-tab="jar" data-i18n="tabJar"></button>
   <button class="tab" data-tab="weeks" data-i18n="tabWeeks"></button>
-  <button class="tab" data-tab="clock" data-i18n="tabClock"></button>
 </div>
 
 <!-- JAR + DECADES -->
-<div class="viz-panel active" id="tab-jar">
+<div class="viz-panel" id="tab-jar">
   <div class="jar-decades-wrap">
     <svg id="jar-svg" width="160" height="280" viewBox="0 0 180 300" style="flex-shrink:0"></svg>
     <div class="jar-decades-right">
@@ -419,7 +467,7 @@ h1 em{font-style:italic;color:var(--lived)}
 </div>
 
 <!-- CLOCK -->
-<div class="viz-panel" id="tab-clock">
+<div class="viz-panel active" id="tab-clock">
   <div class="clock-wrap">
     <svg id="clock-svg" width="280" height="280" viewBox="0 0 280 280"></svg>
     <div class="clock-info">
@@ -434,6 +482,20 @@ h1 em{font-style:italic;color:var(--lived)}
       </div>
     </div>
   </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary">
+  <div class="stat"><div class="stat-val" id="s-age">—</div><div class="stat-lbl" data-i18n="sAge"></div></div>
+  <div class="stat"><div class="stat-val" id="s-lived">—</div><div class="stat-lbl" data-i18n="sLived"></div></div>
+  <div class="stat"><div class="stat-val" id="s-remaining">—</div><div class="stat-lbl" data-i18n="sRemaining"></div></div>
+  <div class="stat"><div class="stat-val" id="s-pct">—</div><div class="stat-lbl" data-i18n="sPct"></div></div>
+  <div class="stat"><div class="stat-val" id="s-expectancy">—</div><div class="stat-lbl" data-i18n="sExp"></div></div>
+  <div class="stat"><div class="stat-val" id="s-days">—</div><div class="stat-lbl" data-i18n="sDays"></div></div>
+  <div class="stat"><div class="stat-val" id="s-days-rem">—</div><div class="stat-lbl" data-i18n="sDaysRem"></div></div>
+</div>
+<div class="share-launch">
+  <button class="donate-btn-outline share-btn" onclick="openShare()" data-i18n="shareBtn">Share</button>
 </div>
 
 <!-- MILESTONES -->
@@ -517,6 +579,53 @@ h1 em{font-style:italic;color:var(--lived)}
         <div class="qr-wrap" id="eth-qr"></div>
       </div>
     </div>
+</div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal" onclick="handleShareOverlayClick(event)">
+  <div class="modal share-modal">
+    <button class="modal-close" onclick="closeShare()">✕</button>
+    <div class="modal-label" data-i18n="shareEyebrow"></div>
+    <div class="modal-title" data-i18n="shareTitle"></div>
+    <div class="modal-sub" data-i18n="shareSub"></div>
+    <div class="share-grid">
+      <div class="share-card">
+        <div class="share-card-head">
+          <div>
+            <div class="share-card-title">Instagram</div>
+            <div class="share-card-sub" data-i18n="shareIgSub"></div>
+          </div>
+          <div class="share-badge">1080×1350</div>
+        </div>
+        <div class="share-preview">
+          <img id="share-preview-instagram" alt="Instagram share preview">
+        </div>
+        <div class="share-actions">
+          <button class="donate-btn" onclick="shareToInstagram()" data-i18n="shareIgAction"></button>
+          <button class="donate-btn-outline" onclick="downloadShareAsset('instagram')" data-i18n="shareDownload"></button>
+          <button class="donate-btn-outline" onclick="copyShareCaption('instagram')" data-i18n="shareCopyCaption"></button>
+        </div>
+      </div>
+      <div class="share-card">
+        <div class="share-card-head">
+          <div>
+            <div class="share-card-title">X</div>
+            <div class="share-card-sub" data-i18n="shareXSub"></div>
+          </div>
+          <div class="share-badge">1600×900</div>
+        </div>
+        <div class="share-preview x">
+          <img id="share-preview-x" alt="X share preview">
+        </div>
+        <div class="share-actions">
+          <button class="donate-btn" onclick="shareToX()" data-i18n="shareXAction"></button>
+          <button class="donate-btn-outline" onclick="downloadShareAsset('x')" data-i18n="shareDownload"></button>
+          <button class="donate-btn-outline" onclick="copyShareCaption('x')" data-i18n="shareCopyCaption"></button>
+        </div>
+      </div>
+    </div>
+    <div class="share-status" id="share-status"></div>
   </div>
 </div>
 
@@ -554,6 +663,7 @@ const SOURCES = {
     f: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5732407/",  // Source: age-related diseases 
   },
 };
+const SITE_URL = 'https://markelkori.github.io/memento/';
 // ═══════════════════════════════════════════════════════════════
 
 // ─── TRANSLATIONS ──────────────────────────────────────────────
@@ -567,9 +677,9 @@ const LANGS = {
     sAge:'age', sLived:'years lived', sRemaining:'years left',
     sPct:'elapsed', sExp:'life expectancy', sDays:'days behind', sDaysRem:'days remaining',
     tabJar:'Vessel & Decades', tabWeeks:'Weeks', tabClock:'Life Clock', tabDecades:'Decades',
-    welcomeEyebrow:'memento mori',
+    welcomeEyebrow:'memento',
     welcomeHeading:'How much of your life have you <em>already lived?</em>',
-    welcomeSub:'Enter your date of birth to find out. Your data is never stored or shared.',
+    welcomeSub:'Enter your date of birth, sex, and country to find out. Your data is never stored or shared.',
     ctaEyebrow:'the bigger picture',
     ctaTitle:'Ageing can be <em>defeated.</em><br>Start fighting today.',
     ctaLink:'Learn more about life extension →',
@@ -605,6 +715,24 @@ const LANGS = {
     donateCryptoLabel:'Crypto',
     cryptoTap:'tap to copy',
     copiedMsg:'Copied!',
+    shareBtn:'Share',
+    shareEyebrow:'share your result',
+    shareTitle:'Share a visual card',
+    shareSub:'Pick a format for Instagram or X. The site will prepare a polished image and a ready caption.',
+    shareIgSub:'Portrait card for stories, reels covers, and feed posts.',
+    shareXSub:'Wide card for X with a ready tweet link.',
+    shareIgAction:'Share to Instagram',
+    shareXAction:'Share to X',
+    shareDownload:'Download image',
+    shareCopyCaption:'Copy caption',
+    shareReady:'Your share card is ready.',
+    shareCaptionCopied:'Caption copied.',
+    shareDownloaded:'Image downloaded.',
+    shareIgFallback:'Image downloaded and caption copied. Open Instagram and attach the card.',
+    shareXFallback:'Image downloaded and caption copied. The X post composer has been opened in a new tab.',
+    shareNativeDone:'Share sheet opened.',
+    shareTweet:pct=>`Check how much time you may have left. I have already lived ${pct} of my expected life. Visualise your life here:`,
+    shareCaption:(pct,age,country)=>`I have already lived ${pct} of my expected life.\nAge: ${age}\nRegion: ${country}\n\nCheck how much time you may have left and visualise your life here: ${SITE_URL}`,
     overLETitle:'You have outlived your region\'s life expectancy',
     overLEMsg:rate=>`You have lived longer than the expected life expectancy in your region. You carry good genes, favourable environmental factors, and likely a healthy lifestyle. However, your probability of death is rising steeply with each passing year: +${rate}% per year.`,
     invalidAgeTitle:'Age entered is invalid',
@@ -621,9 +749,9 @@ const LANGS = {
     sAge:'вік', sLived:'прожито років', sRemaining:'залишилось років',
     sPct:'використано', sExp:'очікуваний вік', sDays:'днів позаду', sDaysRem:'днів залишилось',
     tabJar:'Посудина & Декади', tabWeeks:'Тижні', tabClock:'Годинник', tabDecades:'Декади',
-    welcomeEyebrow:'memento mori',
+    welcomeEyebrow:'memento',
     welcomeHeading:'Скільки свого життя ви вже <em>прожили?</em>',
-    welcomeSub:'Введіть дату народження, щоб дізнатися. Ваші дані ніколи не зберігаються.',
+    welcomeSub:'Введіть дату народження, стать і країну, щоб дізнатися. Ваші дані ніколи не зберігаються.',
     ctaEyebrow:'більша картина',
     ctaTitle:'Старіння можна <em>перемогти.</em><br>Починайте боротьбу вже сьогодні.',
     ctaLink:'Дізнайтеся більше про продовження життя →',
@@ -659,6 +787,24 @@ const LANGS = {
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'натисніть щоб скопіювати',
     copiedMsg:'Скопійовано!',
+    shareBtn:'Поділитися',
+    shareEyebrow:'поділитися результатом',
+    shareTitle:'Поділитися візуальною карткою',
+    shareSub:'Оберіть формат для Instagram або X. Сайт підготує гарну картку й готовий підпис.',
+    shareIgSub:'Вертикальна картка для сторіз, обкладинок reels і стрічки.',
+    shareXSub:'Широка картка для X з готовим посиланням на пост.',
+    shareIgAction:'Поділитися в Instagram',
+    shareXAction:'Поділитися в X',
+    shareDownload:'Завантажити картинку',
+    shareCopyCaption:'Скопіювати підпис',
+    shareReady:'Картка для поширення готова.',
+    shareCaptionCopied:'Підпис скопійовано.',
+    shareDownloaded:'Картинку завантажено.',
+    shareIgFallback:'Картинку завантажено, а підпис скопійовано. Відкрийте Instagram і прикріпіть картку.',
+    shareXFallback:'Картинку завантажено, а підпис скопійовано. Вікно публікації X відкрито в новій вкладці.',
+    shareNativeDone:'Вікно поширення відкрито.',
+    shareTweet:pct=>`Перевірте, скільки часу вам може залишатись. Я вже прожив(ла) ${pct} від очікуваного життя. Візуалізуйте своє життя тут:`,
+    shareCaption:(pct,age,country)=>`Я вже прожив(ла) ${pct} від очікуваного життя.\nВік: ${age}\nРегіон: ${country}\n\nПеревірте, скільки часу вам може залишатись, і візуалізуйте своє життя тут: ${SITE_URL}`,
     overLETitle:'Ви прожили довше, ніж очікувана тривалість життя у вашому регіоні',
     overLEMsg:rate=>`Ви прожили довше, ніж очікувана тривалість життя у вашому регіоні. Ви маєте гарні гени, сприятливі фактори середовища і, можливо, здоровий спосіб життя. Однак ваша ймовірність смерті стрімко зростає з кожним роком: +${rate}% на рік.`,
     invalidAgeTitle:'Введений вік некоректний',
@@ -675,9 +821,9 @@ const LANGS = {
     sAge:'возраст', sLived:'прожито лет', sRemaining:'осталось лет',
     sPct:'использовано', sExp:'ожидаемый возраст', sDays:'дней позади', sDaysRem:'дней осталось',
     tabJar:'Сосуд & Декады', tabWeeks:'Недели', tabClock:'Часы жизни', tabDecades:'Декады',
-    welcomeEyebrow:'memento mori',
+    welcomeEyebrow:'memento',
     welcomeHeading:'Сколько жизни вы уже <em>прожили?</em>',
-    welcomeSub:'Введите дату рождения, чтобы узнать. Ваши данные никогда не сохраняются.',
+    welcomeSub:'Введите дату рождения, пол и страну, чтобы узнать. Ваши данные никогда не сохраняются.',
     ctaEyebrow:'общая картина',
     ctaTitle:'Старение можно <em>победить.</em><br>Начинайте борьбу прямо сейчас.',
     ctaLink:'Узнайте больше о продлении жизни →',
@@ -713,6 +859,24 @@ const LANGS = {
     donateCryptoLabel:'Криптовалюта',
     cryptoTap:'нажмите чтобы скопировать',
     copiedMsg:'Скопировано!',
+    shareBtn:'Поделиться',
+    shareEyebrow:'поделиться результатом',
+    shareTitle:'Поделиться визуальной карточкой',
+    shareSub:'Выберите формат для Instagram или X. Сайт подготовит красивую картинку и готовый текст.',
+    shareIgSub:'Вертикальная карточка для сторис, обложек reels и ленты.',
+    shareXSub:'Широкая карточка для X с готовой ссылкой на публикацию.',
+    shareIgAction:'Поделиться в Instagram',
+    shareXAction:'Поделиться в X',
+    shareDownload:'Скачать картинку',
+    shareCopyCaption:'Скопировать текст',
+    shareReady:'Карточка для публикации готова.',
+    shareCaptionCopied:'Текст скопирован.',
+    shareDownloaded:'Картинка скачана.',
+    shareIgFallback:'Картинка скачана, а текст скопирован. Откройте Instagram и прикрепите карточку.',
+    shareXFallback:'Картинка скачана, а текст скопирован. Окно публикации X открыто в новой вкладке.',
+    shareNativeDone:'Окно публикации открыто.',
+    shareTweet:pct=>`Проверьте, сколько вам осталось, и визуализируйте свою жизнь. У меня уже прожито ${pct} ожидаемой жизни:`,
+    shareCaption:(pct,age,country)=>`У меня уже прожито ${pct} ожидаемой жизни.\nВозраст: ${age}\nРегион: ${country}\n\nПроверьте, сколько вам осталось, и визуализируйте свою жизнь: ${SITE_URL}`,
     overLETitle:'Вы прожили дольше, чем ожидаемая продолжительность жизни в вашем регионе',
     overLEMsg:rate=>`Вы прожили дольше, чем ожидаемая продолжительность жизни в вашем регионе. Вы обладатель хороших генов, средовых факторов и возможно правильного образа жизни. Однако в любом случае ваша вероятность смерти стремительно растёт с каждым годом: +${rate}% в год.`,
     invalidAgeTitle:'Введённый возраст некорректен',
@@ -775,6 +939,7 @@ function setLang(l) {
   lang=l;
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
   applyI18n();
+  if(document.getElementById('shareModal').classList.contains('open')) refreshShareAssets();
   if(document.getElementById('main-content').classList.contains('visible')) compute();
 }
 
@@ -801,6 +966,17 @@ function fmtBig(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))
 function svgEl(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag);}
 function setA(el,attrs){for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v);}
 function mk(tag,cls,text){const el=document.createElement(tag);el.className=cls;if(text!==undefined)el.textContent=text;return el;}
+function yearShortLabel(n, currentLang=lang){
+  if(currentLang==='en') return 'y';
+  if(currentLang==='ua') return 'р';
+  if(currentLang!=='ru') return 'y';
+  const whole=Math.floor(Math.abs(Number(n)));
+  const mod10=whole%10;
+  const mod100=whole%100;
+  if(mod10===1 && mod100!==11) return 'г';
+  if(mod10>=2 && mod10<=4 && !(mod100>=12 && mod100<=14)) return 'г';
+  return 'л';
+}
 
 // Gompertz-Makeham law: μ(x) = A + B·e^(cx)
 // Parameters fitted to general population data (HMD averages)
@@ -887,13 +1063,14 @@ function compute() {
   drawClock(pct,livedY,exp,livedHours,livedDays,livedWeeks,remDays,remSat,overLE);
   drawDecades(livedY,exp);
   drawMilestones(bd,now,exp,gender);
+  if(document.getElementById('shareModal').classList.contains('open')) refreshShareAssets();
 }
 
 function updateSummary(livedY,remY,pct,exp,days,overLE) {
   const ageY=Math.floor(livedY),ageM=Math.floor((livedY-ageY)*12);
-  const sep=lang==='en'?['y ','m']:[' л ',' м'];
-  if(lang==='ua')sep[0]=' р ';
-  document.getElementById('s-age').textContent=ageY+sep[0]+ageM+sep[1];
+  const yearShort=yearShortLabel(ageY);
+  const monthShort=lang==='en'?'m':'м';
+  document.getElementById('s-age').textContent=`${ageY} ${yearShort} ${ageM} ${monthShort}`;
   document.getElementById('s-lived').textContent=livedY.toFixed(1);
   document.getElementById('s-remaining').textContent=overLE?'???':remY.toFixed(1);
   document.getElementById('s-pct').textContent=(pct*100).toFixed(1)+'%';
@@ -951,8 +1128,14 @@ function drawJar(pct,livedY,remY,overLE) {
   }
 
   document.getElementById('jar-pct-num').textContent=(pct*100).toFixed(1)+'%';
-  document.getElementById('jar-lived-years').textContent=T('jarLivedYears',livedY.toFixed(1));
-  document.getElementById('jar-remaining-years').textContent=overLE?'???':T('jarRemYears',remY.toFixed(1));
+  const livedYearsLabel = lang==='ru'
+    ? `${livedY.toFixed(1)} ${yearShortLabel(livedY)} прожито`
+    : T('jarLivedYears',livedY.toFixed(1));
+  const remainingYearsLabel = lang==='ru'
+    ? `${remY.toFixed(1)} ${yearShortLabel(remY)} осталось`
+    : T('jarRemYears',remY.toFixed(1));
+  document.getElementById('jar-lived-years').textContent=livedYearsLabel;
+  document.getElementById('jar-remaining-years').textContent=overLE?'???':remainingYearsLabel;
   const locale=lang==='ua'?'uk-UA':lang==='ru'?'ru-RU':'en-GB';
   document.getElementById('jar-today-note').textContent=T('jarToday',new Date().toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'}));
 }
@@ -1207,6 +1390,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
 
 // ─── DONATE MODAL ─────────────────────────────────────────────
 let qrGenerated=false;
+let shareAssets=null;
 
 function openDonate() {
   const m = document.getElementById('donateModal');
@@ -1226,7 +1410,9 @@ function closeDonate() {
   setTimeout(()=>{
     m.classList.remove('open');
     m.style.display='';
-    document.body.style.overflow='';
+    if(!document.getElementById('shareModal').classList.contains('open')) {
+      document.body.style.overflow='';
+    }
   }, 260);
 }
 
@@ -1234,7 +1420,38 @@ function handleOverlayClick(e) {
   if(e.target===document.getElementById('donateModal')) closeDonate();
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDonate();});
+function openShare() {
+  if(!document.getElementById('main-content').classList.contains('visible')) return;
+  const m = document.getElementById('shareModal');
+  m.style.display='flex';
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    m.classList.add('open','visible');
+    refreshShareAssets();
+  }));
+}
+
+function closeShare() {
+  const m = document.getElementById('shareModal');
+  m.classList.remove('visible');
+  setTimeout(()=>{
+    m.classList.remove('open');
+    m.style.display='';
+    if(!document.getElementById('donateModal').classList.contains('open')) {
+      document.body.style.overflow='';
+    }
+  },260);
+}
+
+function handleShareOverlayClick(e) {
+  if(e.target===document.getElementById('shareModal')) closeShare();
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  closeDonate();
+  closeShare();
+});
 
 function generateQRs() {
   try {
@@ -1275,6 +1492,235 @@ function selectAmount(el,val) {
   el.classList.add('active');
 }
 
+function setShareStatus(msgKey) {
+  const el=document.getElementById('share-status');
+  if(!el) return;
+  el.textContent=msgKey?T(msgKey):'';
+}
+
+function getShareData() {
+  return {
+    age:document.getElementById('s-age').textContent.trim(),
+    elapsed:document.getElementById('s-pct').textContent.trim(),
+    remaining:document.getElementById('s-remaining').textContent.trim(),
+    expectancy:document.getElementById('s-expectancy').textContent.trim(),
+    days:document.getElementById('s-days').textContent.trim(),
+    country:document.getElementById('country').selectedOptions[0]?.textContent.trim()||'',
+    title:document.querySelector('h1')?.textContent.trim()||'Memento',
+  };
+}
+
+function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines=6) {
+  const words=text.split(/\s+/);
+  const lines=[];
+  let line='';
+  for(const word of words){
+    const test=line?line+' '+word:word;
+    if(ctx.measureText(test).width>maxWidth&&line){
+      lines.push(line);
+      line=word;
+      if(lines.length===maxLines-1) break;
+    } else {
+      line=test;
+    }
+  }
+  if(line&&lines.length<maxLines) lines.push(line);
+  lines.forEach((ln,idx)=>ctx.fillText(ln,x,y+idx*lineHeight));
+}
+
+function drawShareCard(format) {
+  const isInstagram=format==='instagram';
+  const canvas=document.createElement('canvas');
+  canvas.width=isInstagram?1080:1600;
+  canvas.height=isInstagram?1350:900;
+  const ctx=canvas.getContext('2d');
+  const data=getShareData();
+  const W=canvas.width,H=canvas.height;
+
+  const grad=ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,'#0b0b0c');
+  grad.addColorStop(.45,'#141212');
+  grad.addColorStop(1,'#22170f');
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,W,H);
+
+  const glow=ctx.createRadialGradient(W*.8,H*.2,20,W*.8,H*.2,W*.55);
+  glow.addColorStop(0,'rgba(200,169,110,.24)');
+  glow.addColorStop(1,'rgba(200,169,110,0)');
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,0,W,H);
+
+  ctx.strokeStyle='rgba(200,169,110,.18)';
+  ctx.lineWidth=2;
+  ctx.strokeRect(32,32,W-64,H-64);
+
+  ctx.fillStyle='rgba(255,255,255,.08)';
+  ctx.beginPath();
+  ctx.arc(W*(isInstagram ? .86 : .84),H*(isInstagram ? .17 : .22),isInstagram?120:90,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle='#c8a96e';
+  ctx.font=`${isInstagram?30:26}px "DM Mono", monospace`;
+  ctx.letterSpacing='2px';
+  ctx.fillText('MEMENTO',isInstagram?88:96,isInstagram?110:100);
+
+  ctx.fillStyle='#f0ece4';
+  ctx.font=`${isInstagram?84:76}px "DM Serif Display", serif`;
+  wrapCanvasText(ctx, lang==='ru' ? 'Жизнь в числах' : lang==='ua' ? 'Життя в числах' : 'Life in numbers', isInstagram?88:96, isInstagram?240:205, isInstagram?680:760, isInstagram?96:86, 2);
+
+  ctx.fillStyle='rgba(240,236,228,.72)';
+  ctx.font=`${isInstagram?28:24}px "DM Sans", sans-serif`;
+  wrapCanvasText(ctx, T('shareTweet',data.elapsed), isInstagram?88:96, isInstagram?405:360, isInstagram?720:860, isInstagram?42:36, 4);
+
+  const cards = [
+    {label:lang==='ru'?'ВОЗРАСТ':lang==='ua'?'ВІК':'AGE', value:data.age},
+    {label:lang==='ru'?'ПРОЖИТО':lang==='ua'?'ПРОЙДЕНО':'ELAPSED', value:data.elapsed},
+    {label:lang==='ru'?'ОСТАЛОСЬ':lang==='ua'?'ЗАЛИШИЛОСЬ':'LEFT', value:data.remaining},
+    {label:lang==='ru'?'ОЖИДАНИЕ':lang==='ua'?'ОЧІКУВАННЯ':'EXPECTANCY', value:data.expectancy},
+  ];
+
+  const startY=isInstagram?640:560;
+  const boxW=isInstagram?Math.floor((W-88*2-18)/2):Math.floor((W-96*2-18*3)/4);
+  const boxH=isInstagram?150:138;
+  cards.forEach((card,idx)=>{
+    const row=isInstagram?Math.floor(idx/2):0;
+    const col=isInstagram?idx%2:idx;
+    const x=(isInstagram?88:96)+col*(boxW+18);
+    const y=startY+row*(boxH+18);
+    ctx.fillStyle='rgba(20,20,20,.82)';
+    ctx.fillRect(x,y,boxW,boxH);
+    ctx.strokeStyle='rgba(200,169,110,.18)';
+    ctx.strokeRect(x,y,boxW,boxH);
+    ctx.fillStyle='rgba(200,169,110,.92)';
+    ctx.font=`${isInstagram?22:18}px "DM Mono", monospace`;
+    ctx.fillText(card.label,x+24,y+34);
+    ctx.fillStyle='#f0ece4';
+    ctx.font=`${isInstagram?44:38}px "DM Sans", sans-serif`;
+    ctx.fillText(card.value,x+24,y+90);
+  });
+
+  ctx.fillStyle='rgba(240,236,228,.72)';
+  ctx.font=`${isInstagram?24:21}px "DM Sans", sans-serif`;
+  const metaLine=(lang==='ru'?'Регион: ':lang==='ua'?'Регіон: ':'Region: ')+data.country;
+  ctx.fillText(metaLine,isInstagram?88:96,isInstagram?1048:760);
+
+  ctx.fillStyle='#c8a96e';
+  ctx.font=`${isInstagram?30:26}px "DM Mono", monospace`;
+  ctx.fillText('markelkori.github.io/memento',isInstagram?88:96,isInstagram?1180:806);
+
+  ctx.fillStyle='rgba(240,236,228,.4)';
+  ctx.fillRect(isInstagram?88:96,isInstagram?1210:824,isInstagram?904:1408,1);
+  ctx.fillStyle='rgba(240,236,228,.82)';
+  ctx.font=`${isInstagram?24:20}px "DM Sans", sans-serif`;
+  ctx.fillText(lang==='ru'?'Визуализируйте свою жизнь' : lang==='ua'?'Візуалізуйте своє життя' : 'Visualise your life', isInstagram?88:96, isInstagram?1260:860);
+
+  return canvas;
+}
+
+function canvasToBlob(canvas) {
+  return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+}
+
+async function refreshShareAssets() {
+  const igCanvas=drawShareCard('instagram');
+  const xCanvas=drawShareCard('x');
+  shareAssets={
+    instagram:{canvas:igCanvas, blob:await canvasToBlob(igCanvas), url:igCanvas.toDataURL('image/png')},
+    x:{canvas:xCanvas, blob:await canvasToBlob(xCanvas), url:xCanvas.toDataURL('image/png')}
+  };
+  document.getElementById('share-preview-instagram').src=shareAssets.instagram.url;
+  document.getElementById('share-preview-x').src=shareAssets.x.url;
+  setShareStatus('shareReady');
+}
+
+function downloadBlob(blob,filename) {
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+async function ensureShareAssets() {
+  if(!shareAssets) await refreshShareAssets();
+  return shareAssets;
+}
+
+function buildShareCaption() {
+  const data=getShareData();
+  return T('shareCaption',data.elapsed,data.age,data.country);
+}
+
+async function copyText(text) {
+  const ta=document.createElement('textarea');
+  ta.value=text;
+  ta.setAttribute('readonly','');
+  ta.style.position='fixed';
+  ta.style.top='-9999px';
+  ta.style.opacity='0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  let ok=false;
+  try { ok=document.execCommand('copy'); } catch {}
+  document.body.removeChild(ta);
+  if(ok) return true;
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function copyShareCaption(format) {
+  await ensureShareAssets();
+  await copyText(buildShareCaption(format));
+  setShareStatus('shareCaptionCopied');
+}
+
+async function downloadShareAsset(format) {
+  const assets=await ensureShareAssets();
+  downloadBlob(assets[format].blob,`memento-${format}.png`);
+  setShareStatus('shareDownloaded');
+}
+
+async function shareToInstagram() {
+  const assets=await ensureShareAssets();
+  const caption=buildShareCaption('instagram');
+  const file=new File([assets.instagram.blob],'memento-instagram.png',{type:'image/png'});
+  if(navigator.canShare && navigator.canShare({files:[file]})) {
+    try {
+      await navigator.share({files:[file],text:caption,title:'Memento'});
+      setShareStatus('shareNativeDone');
+      return;
+    } catch {}
+  }
+  await copyText(caption);
+  downloadBlob(assets.instagram.blob,'memento-instagram.png');
+  setShareStatus('shareIgFallback');
+}
+
+async function shareToX() {
+  const popup=window.open('about:blank','_blank','noopener');
+  const assets=await ensureShareAssets();
+  const data=getShareData();
+  const params=new URLSearchParams({
+    text:T('shareTweet',data.elapsed),
+    url:SITE_URL,
+    hashtags:'memento,life,visualization'
+  });
+  const intent='https://twitter.com/intent/tweet?'+params.toString();
+  await copyText(buildShareCaption('x'));
+  downloadBlob(assets.x.blob,'memento-x.png');
+  if(popup) popup.location=intent;
+  else window.open(intent,'_blank','noopener');
+  setShareStatus('shareXFallback');
+}
+
 function handlePayPal() {
   window.open('https://www.paypal.com/paypalme/markelkori','_blank','noopener');
 }
@@ -1286,6 +1732,8 @@ function handleBank() {
 // ─── WELCOME → MAIN TRANSITION ───────────────────────────────
 function goToMain() {
   const wd = document.getElementById('welcome-date').value;
+  const welcomeGender = document.getElementById('welcome-gender');
+  const welcomeCountry = document.getElementById('welcome-country');
   if (!wd) {
     document.getElementById('welcome-date').focus();
     document.getElementById('welcome-date').style.borderColor='var(--danger)';
@@ -1302,6 +1750,8 @@ function goToMain() {
   }
   // copy date to main input
   document.getElementById('birthdate').value = wd;
+  document.getElementById('gender').value = welcomeGender.value;
+  document.getElementById('country').value = welcomeCountry.value;
 
   const ws = document.getElementById('welcome-screen');
   ws.style.transition = 'opacity .4s ease';
@@ -1329,6 +1779,8 @@ const defDate=new Date();
 defDate.setFullYear(defDate.getFullYear()-30);
 document.getElementById('welcome-date').value=defDate.toISOString().slice(0,10);
 document.getElementById('birthdate').value=defDate.toISOString().slice(0,10);
+document.getElementById('welcome-gender').value=document.getElementById('gender').value;
+document.getElementById('welcome-country').value=document.getElementById('country').value;
 applyI18n();
 </script>
 </body>
