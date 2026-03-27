@@ -741,7 +741,7 @@ const LANGS = {
     clockOverLESub:'Remaining: ???',
   },
   ua: {
-    mori:'memento',
+    mori:'',
     title:'Життя в <em>числах</em>',
     subtitle:'Візуалізація прожитого і того, що попереду. Кожен день — невідновний ресурс.',
     labelBirth:'Дата народження', labelGender:'Стать', labelCountry:'Країна',
@@ -1711,7 +1711,7 @@ async function shareToX() {
   const params=new URLSearchParams({
     text:T('shareTweet',data.elapsed),
     url:SITE_URL,
-    hashtags:'memento,life,visualization'
+    hashtags:'memento,aging,longevity'
   });
   const intent='https://twitter.com/intent/tweet?'+params.toString();
   await copyText(buildShareCaption('x'));
